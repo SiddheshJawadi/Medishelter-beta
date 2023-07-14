@@ -1,0 +1,84 @@
+'use strict';
+
+const { Gateway, Wallets } = require('fabric-network');
+const FabricCAServices = require('fabric-ca-client');
+const path = require('path');
+const { buildCAClient, registerAndEnrollUser, enrollAdmin } = require('../../test-application/javascript/CAUtil.js');
+const { buildCCPOrg1, buildWallet } = require('../../test-application/javascript/AppUtil.js');
+
+const channelName = process.env.CHANNEL_NAME || 'mychannel';
+const chaincodeName = process.env.CHAINCODE_NAME || 'basic';
+
+const mspOrg1 = 'Org1MSP';
+const walletPath = path.join(__dirname, 'wallet');
+const org1UserId = 'javascriptAppUser';
+
+let adminEnrolled = false;
+let userEnrolled = false;
+
+function prettyJSONString(inputString) {
+    return JSON.stringify(JSON.parse(inputString), null, 2);
+}
+
+async function main(report) {
+    console.log(report, "is invoke data");
+    try {
+        const ccp = buildCCPOrg1();
+        const caClient = buildCAClient(FabricCAServices, ccp, 'ca.org1.example.com');
+        const wallet = await buildWallet(Wallets, walletPath);
+
+        // if (!adminEnrolled) {
+        //     await enrollAdmin(caClient, wallet, mspOrg1);
+        //     adminEnrolled = true;
+        // }
+
+        // if (!userEnrolled) {
+        //     await registerAndEnrollUser(caClient, wallet, mspOrg1, org1UserId, 'org1.department1');
+        //     userEnrolled = true;
+        // }
+
+        const gateway = new Gateway();
+
+        try {
+            await gateway.connect(ccp, {
+                wallet,
+                identity: org1UserId,
+                discovery: { enabled: true, asLocalhost: true }
+            });
+
+            const network = await gateway.getNetwork(channelName);
+            const contract = network.getContract(chaincodeName);
+
+    
+            console.log('\n--> Submit Transaction: CreateAsset, creates new asset with ID, color, owner, size, and appraisedValue arguments');
+            let result = await contract.submitTransaction('CreateAsset', report.email, data.patientName, report.file);
+            console.log('*** Result: committed');
+            if (`${result}` !== '') {
+                console.log(`*** Result: ${prettyJSONString(result.toString())}`);
+                return "Successfully committed the change to the ledger by the peer";
+            }
+            
+            // console.log('\n--> Evaluate Transaction: AssetExists, function returns "true" if an asset with given assetID exists');
+            // result = await contract.evaluateTransaction('AssetExists', data);
+            // console.log(`*** Result: ${prettyJSONString(result.toString())}`);
+            
+            // console.log('\n--> Evaluate Transaction: ReadAsset, function returns an asset with a given assetID');
+            // let result = await contract.evaluateTransaction('ReadAsset', data);
+            // console.log('*** Result: ID searching');
+
+
+            // console.log('\n--> Evaluate Transaction: ReadAsset, function returns "asset1" attributes');
+            // result = await contract.evaluateTransaction('ReadAsset', data);
+            // console.log(`*** Result: ${prettyJSONString(result.toString())}`);
+            // return result;
+            
+        } finally {
+            gateway.disconnect();
+        }
+    } catch (error) {
+        console.error(`******** FAILED to run the application: ${error}`);
+        process.exit(1);
+    }
+}
+
+module.exports = main;
