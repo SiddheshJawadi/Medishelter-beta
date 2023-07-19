@@ -13,8 +13,6 @@ const mspOrg1 = 'Org1MSP';
 const walletPath = path.join(__dirname, 'wallet');
 const org1UserId = 'javascriptAppUser';
 
-let adminEnrolled = false;
-let userEnrolled = false;
 
 function prettyJSONString(inputString) {
     return JSON.stringify(JSON.parse(inputString), null, 2);
@@ -27,15 +25,13 @@ async function main(report) {
         const caClient = buildCAClient(FabricCAServices, ccp, 'ca.org1.example.com');
         const wallet = await buildWallet(Wallets, walletPath);
 
-        // if (!adminEnrolled) {
-        //     await enrollAdmin(caClient, wallet, mspOrg1);
-        //     adminEnrolled = true;
-        // }
 
-        // if (!userEnrolled) {
-        //     await registerAndEnrollUser(caClient, wallet, mspOrg1, org1UserId, 'org1.department1');
-        //     userEnrolled = true;
-        // }
+        await enrollAdmin(caClient, wallet, mspOrg1);
+
+
+
+        await registerAndEnrollUser(caClient, wallet, mspOrg1, org1UserId, 'org1.department1');
+
 
         const gateway = new Gateway();
 
@@ -51,7 +47,7 @@ async function main(report) {
 
     
             console.log('\n--> Submit Transaction: CreateAsset, creates new asset with ID, color, owner, size, and appraisedValue arguments');
-            let result = await contract.submitTransaction('CreateAsset', report.email, data.patientName, report.file);
+            let result = await contract.submitTransaction('CreateAsset', report.email, report.patientName, report.file);
             console.log('*** Result: committed');
             if (`${result}` !== '') {
                 console.log(`*** Result: ${prettyJSONString(result.toString())}`);

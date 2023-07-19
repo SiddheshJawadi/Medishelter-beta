@@ -1,12 +1,57 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import Axios from 'axios';
 import './css/Registration.css';
 import { Link } from 'react-router-dom';
+
+const Navigation = ({ handleLogout }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleClick = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  return (
+    <nav>
+      <ul>
+        <li>
+          <Link to="/radiologistdoctor">Home</Link>
+        </li>
+        <li>
+          <Link to="/blankprescription">Prescription</Link>
+        </li>
+        <li>
+          <Link to="/reportdoctor">Report</Link>
+        </li>
+        <li>
+          <div>
+            <button onClick={handleClick}>
+              <div className="menu-icon">
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            </button>
+            {isMenuOpen && (
+              <ul className="menu-options">
+                <li>
+                  <Link to="/editprofile">Edit Profile</Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout}>Logout</button>
+                </li>
+              </ul>
+            )}
+          </div>
+        </li>
+      </ul>
+    </nav>
+  );
+};
 
 const ReportDoctor = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState('');
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -23,26 +68,21 @@ const ReportDoctor = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const base64File = reader.result;
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('file', file);
 
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('email', email);
-      formData.append('file', base64File);
+    console.log(formData)
 
-      try {
-        const response = await axios.post('http://localhost:3000/radiologistdoctor/report', formData)
+    Axios.post('http://localhost:3000/report', formData)
+      .then((response) => {
         console.log(response.data);
-      } catch (error) {
+        alert(response.data);
+      })
+      .catch((error) => {
         console.error(error);
-      }
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
-    }
+      });
   };
 
   const handleLogout = () => {
@@ -50,50 +90,9 @@ const ReportDoctor = () => {
     window.location.href = '/login';
   };
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const handleClick = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   return (
     <div>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/radiologistdoctor">Home</Link>
-            </li>
-            <li>
-              <Link to="/blankprescription">Prescription</Link>
-            </li>
-            <li>
-              <Link to="/reportdoctor">Report</Link>
-            </li>
-            <li>
-              <div>
-                <button onClick={handleClick}>
-                  <div className="menu-icon">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                  </div>
-                </button>
-                {isMenuOpen && (
-                  <ul className="menu-options">
-                    <li>
-                      <Link to="/editprofile">Edit Profile</Link>
-                    </li>
-                    <li>
-                      <button onClick={handleLogout}>Logout</button>
-                    </li>
-                  </ul>
-                )}
-              </div>
-            </li>
-          </ul>
-        </nav>
-      </div>
+      <Navigation handleLogout={handleLogout} />
       <div className="logIn-form">
         <form onSubmit={handleSubmit}>
           <label style={{ margin: '8px' }} htmlFor="email">

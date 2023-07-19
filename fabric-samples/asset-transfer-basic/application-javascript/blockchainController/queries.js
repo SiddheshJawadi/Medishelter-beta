@@ -7,7 +7,7 @@ var main = require('../invoke')
  */
 let createMedicalDoc = async (report) => {
 
- console.log("data is:",report.patientName);
+ console.log("data is:",report.email);
     try {
      const meddoc =  await main(report);
        // console.log("meddoc ", meddoc);
