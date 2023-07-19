@@ -13,6 +13,7 @@ var os = require('os');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 var router = require('./router');
+const fs = require('fs');
 var queries = require('./blockchainController/queries');
 
 
@@ -112,58 +113,49 @@ const verifyToken = (req, res, next) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/')
+    cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname)
+    cb(null, file.originalname);
   },
-})
+});
 
-const upload = multer({ storage: storage })
+const upload = multer({ storage: storage });
 
 // Import the File model
 
 // Define route for file upload
 
-app.post('radiologistdoctor/report', upload.single('file'), async (req, res) => {
-  // const {Patientname,email,filename, path, size } = req.file;
-  const Patientname = req.body.name
-  const email = req.body.email
-  const file = req.body.file
+app.post('/report', upload.single('file'), async (req, res) => {
+  const Patientname = req.body.name;
+  const email = req.body.email;
+  const file = req.file;
 
-  console.log(file)
-  
-  var report = {
-    email : email,
-    patientName: Patientname,
-    file: file,
-    type : "Report"
+  const fileData = fs.readFileSync(file.path);
+  const base64Data = fileData.toString('base64');
+
+  console.log(base64Data);
+
+  try {
+    var report = {
+      email: email,
+      patientName: Patientname,
+      file: base64Data,
+    }
+
+    console.log("Report data is ", report)
+    let response = await queries.createMedicalDoc(report);
+    console.log(response.result);
+    if (response.result == "Successfully committed the change to the ledger by the peer") {
+        res.send(response.result);
+     }else {
+        res.send("Error commiting chaincode!");
+     }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error uploading file');
   }
-  console.log("Report data is ", report)
-  let response = await queries.createMedicalDoc(report);
-  console.log(response.result);
-  if (response.result == "Successfully committed the change to the ledger by the peer") {
-      res.send(response.result);
-   }else {
-      res.send("Error commiting chaincode!");
-   }
-  
-   
-  // const file = new Report({
-  //   Patientname,
-  //   email,
-  //   filename,
-  //   path,
-  //   size,
-  // })
-  // try {
-  //   await file.save()
-  //   res.send(file)
-  // } catch (err) {
-  //   console.log(err)
-  //   res.status(500).send('Error uploading file')
-  // }
-})
+});
 
 app.post('/addOrg', async (req, res) => {
    // ./addOrg.sh
@@ -421,7 +413,7 @@ app.get('/patient/reports/:filename', verifyToken, async (req, res) => {
 
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000') // Replace with your React app URL
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001') // Replace with your React app URL
   res.setHeader(
     'Access-Control-Allow-Methods',
     'GET, POST, OPTIONS, PUT, PATCH, DELETE',
@@ -436,7 +428,12 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(
+  bodyParser.json({ limit: '50mb' }) // Set the payload size limit to 50MB
+);
+app.use(
+  bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 })
+);
 
 app.listen(3000, () => {
   console.log(`Server is running on port 3000.`)
