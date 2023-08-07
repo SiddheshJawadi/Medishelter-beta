@@ -12,13 +12,11 @@ const jwt = require('jsonwebtoken')
 var os = require('os');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-var router = require('./router');
 const fs = require('fs');
 var queries = require('./blockchainController/queries');
 
 
 app.use(cors())
-app.use(router)
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.set('view engine', 'ejs')
