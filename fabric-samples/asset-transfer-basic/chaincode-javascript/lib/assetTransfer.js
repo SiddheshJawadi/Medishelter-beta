@@ -11,7 +11,7 @@ class AssetTransfer extends Contract {
             {
                 email: 'asset1',
                 name: 'blue',
-                files: [5],
+                files: ['5'],
                 fileNames: ['Tomoko'],
             },
         ];
