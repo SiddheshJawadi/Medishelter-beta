@@ -27,9 +27,6 @@ async function main(report) {
 
 
         await enrollAdmin(caClient, wallet, mspOrg1);
-
-
-
         await registerAndEnrollUser(caClient, wallet, mspOrg1, org1UserId, 'org1.department1');
 
 
@@ -45,18 +42,50 @@ async function main(report) {
             const network = await gateway.getNetwork(channelName);
             const contract = network.getContract(chaincodeName);
 
-    
-            console.log('\n--> Submit Transaction: CreateAsset, creates new asset with ID, color, owner, size, and appraisedValue arguments');
-            let result = await contract.submitTransaction('CreateAsset', report.email, report.patientName, report.file);
-            console.log('*** Result: committed');
-            if (`${result}` !== '') {
-                console.log(`*** Result: ${prettyJSONString(result.toString())}`);
-                return "Successfully committed the change to the ledger by the peer";
+            console.log('\n--> Evaluate Transaction: AssetExists, function returns "true" if an asset with given assetID exists');
+            let check = await contract.evaluateTransaction('AssetExists', report.email);
+            console.log(`*** Result: ${prettyJSONString(check.toString())}`);
+
+            if(check == "true"){
+                console.log('\n--> Submit Transaction: UpdateAsset, update asset with ID email, and update name and/or add new file and fileName');
+                console.log(report.email);
+                let result = await contract.submitTransaction('UpdateAsset', report.email, report.patientName, report.file, report.fileName);
+                console.log('*** Result: committed');
+                if (`${result}` !== '') {
+                    console.log(`*** Result: ${prettyJSONString(result.toString())}`);
+                    return "Successfully updated the asset on the ledger";
+                }
             }
+            else if(check == "false"){
+                console.log('\n--> Submit Transaction: CreateAsset, creates new asset with ID email, name, file and filename arguments');
+                let result = await contract.submitTransaction('CreateAsset', report.email, report.patientName, report.file,report.fileName);
+                console.log('*** Result: committed');
+                if (`${result}` !== '') {
+                    console.log(`*** Result: ${prettyJSONString(result.toString())}`);
+                    return "Successfully committed the change to the ledger by the peer";
+                }
+            }
+
+    
+            // console.log('\n--> Submit Transaction: CreateAsset, creates new asset with ID email, name, file and filename arguments');
+            // let result = await contract.submitTransaction('CreateAsset', report.email, report.patientName, report.file,report.fileName);
+            // console.log('*** Result: committed');
+            // if (`${result}` !== '') {
+            //     console.log(`*** Result: ${prettyJSONString(result.toString())}`);
+            //     return "Successfully committed the change to the ledger by the peer";
+            // }
+
+            // console.log('\n--> Submit Transaction: UpdateAsset, update asset with ID email, and update name and/or add new file and fileName');
+            // console.log(report.email);
+            // let result = await contract.submitTransaction('UpdateAsset', report.email, report.patientName, report.file, report.fileName);
+            // console.log('*** Result: committed');
+            // if (`${result}` !== '') {
+            //     console.log(`*** Result: ${prettyJSONString(result.toString())}`);
+            //     return "Successfully updated the asset on the ledger";
+            // }
+
             
-            // console.log('\n--> Evaluate Transaction: AssetExists, function returns "true" if an asset with given assetID exists');
-            // result = await contract.evaluateTransaction('AssetExists', data);
-            // console.log(`*** Result: ${prettyJSONString(result.toString())}`);
+            
             
             // console.log('\n--> Evaluate Transaction: ReadAsset, function returns an asset with a given assetID');
             // let result = await contract.evaluateTransaction('ReadAsset', data);

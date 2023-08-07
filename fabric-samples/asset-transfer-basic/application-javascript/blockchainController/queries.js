@@ -10,7 +10,7 @@ let createMedicalDoc = async (report) => {
  console.log("data is:",report.email);
     try {
      const meddoc =  await main(report);
-       // console.log("meddoc ", meddoc);
+        console.log("meddoc ", meddoc);
        return { result: meddoc };
     
     } catch (err) {

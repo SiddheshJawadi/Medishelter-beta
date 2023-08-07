@@ -12,13 +12,11 @@ const jwt = require('jsonwebtoken')
 var os = require('os');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-var router = require('./router');
 const fs = require('fs');
 var queries = require('./blockchainController/queries');
 
 
 app.use(cors())
-app.use(router)
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.set('view engine', 'ejs')
@@ -141,21 +139,26 @@ app.post('/report', upload.single('file'), async (req, res) => {
       email: email,
       patientName: Patientname,
       file: base64Data,
+      fileName: file.originalname, 
     }
 
-    console.log("Report data is ", report)
+    console.log("Report data is ", report);
     let response = await queries.createMedicalDoc(report);
     console.log(response.result);
     if (response.result == "Successfully committed the change to the ledger by the peer") {
-        res.send(response.result);
-     }else {
-        res.send("Error commiting chaincode!");
-     }
+      res.send(response.result);
+    } else if(response.result == "Successfully updated the asset on the ledger") {
+      res.send(response.result);
+    }
+    else{
+      res.send("Error Commiting Chaincode!")
+    }
   } catch (err) {
     console.log(err);
     res.status(500).send('Error uploading file');
   }
 });
+
 
 app.post('/addOrg', async (req, res) => {
    // ./addOrg.sh
