@@ -145,16 +145,24 @@ app.post('/report', upload.single('file'), async (req, res) => {
     console.log("Report data is ", report);
     let response = await queries.createMedicalDoc(report);
     console.log(response.result);
-    if (response.result == "Successfully committed the change to the ledger by the peer") {
+
+    if (response.result === "Successfully committed the change to the ledger by the peer" ||
+        response.result === "Successfully updated the asset on the ledger") {
+      // Delete the uploaded file after processing
+      fs.unlinkSync(file.path);
+      
       res.send(response.result);
-    } else if(response.result == "Successfully updated the asset on the ledger") {
-      res.send(response.result);
-    }
-    else{
-      res.send("Error Commiting Chaincode!")
+    } else {
+      // Delete the uploaded file even if there was an error
+      fs.unlinkSync(file.path);
+      
+      res.send("Error Committing Chaincode!");
     }
   } catch (err) {
     console.log(err);
+    // Delete the uploaded file in case of an error
+    fs.unlinkSync(file.path);
+    
     res.status(500).send('Error uploading file');
   }
 });
@@ -377,41 +385,63 @@ app.get('/patient', verifyToken, async (req, res) => {
 app.get('/patient/reports', verifyToken, async (req, res) => {
   try {
     const decoded = jwt.verify(req.token, jwtSecret)
-    const reports = await Report.find({ email: decoded.email }) // get all reports with the matching email
-    if (reports.length > 0) {
-      const reportsData = reports.map((report) => {
-        return {
-          Patientname: report.Patientname,
-          email: report.email,
-          filename: report.filename,
-        }
-      })
-      res.status(200).json(reportsData) // send an array of reports to the frontend
-    } else {
-      res.status(404).json({ message: 'User not found' })
+    var report = {
+      email:decoded.email,
     }
+    let response = await queries.allmedicalHistory(report);
+    console.log("Response - ", response)
+    const jsonString = Buffer.from(response.result.data).toString('utf8');
+    console.log("JSONSTRING- ", jsonString)
+    const parsedData = JSON.parse(jsonString);
+
+    console.log("Server pe jo aaya wo:- ")
+    console.log(parsedData.fileNames);
+    res.status(200).json(parsedData.fileNames)
   } catch (err) {
     res.status(403).json({ message: 'Unauthorized' })
   }
 })
 
-app.get('/patient/reports/:filename', verifyToken, async (req, res) => {
+
+app.get('/patient/reports/:index', verifyToken, async (req, res) => {
   try {
-    const decoded = jwt.verify(req.token, jwtSecret)
-    const report = await Report.findOne({
+    const decoded = jwt.verify(req.token, jwtSecret);
+    var report = {
       email: decoded.email,
-      filename: req.params.filename,
-    })
-    if (!report) {
-      res.status(404).json({ message: 'Report not found' })
-    } else {
-      const filePath = `uploads\\${report.filename}`
-      res.download(filePath, report.filename)
-    }
+      index: req.params.index,
+    };
+    let response = await queries.allmedicalHistory(report);
+    const jsonString = Buffer.from(response.result.data).toString('utf8');
+    const parsedData = JSON.parse(jsonString);
+    const filePath = 'uploads/' + parsedData.filename;
+    fs.writeFile(filePath, parsedData.file, 'base64', function(err) {
+      if (err) {
+        res.status(500).json({ message: 'Error writing file' });
+        return;
+      }
+
+      // Now you have the original data in decodedData
+      setTimeout(() => {
+        res.download(filePath, parsedData.filename, function(err) {
+          if (err) {
+            res.status(500).json({ message: 'Error downloading file' });
+            return;
+          }
+          //Remove the file after the download is complete
+          fs.unlink(filePath, function(err) {
+            if (err) {
+              console.error('Error deleting file:', err);
+            } else {
+              console.log('File deleted:', filePath);
+            }
+          });
+        });
+      }, 1000);
+    });
   } catch (err) {
-    res.status(403).json({ message: 'Unauthorized' })
+    res.status(403).json({ message: 'Unauthorized' });
   }
-})
+});
 
 
 

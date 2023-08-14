@@ -42,9 +42,13 @@ async function main(report) {
             const network = await gateway.getNetwork(channelName);
             const contract = network.getContract(chaincodeName);
 
+            //Checking for wheather the asset exists or not.
+
             console.log('\n--> Evaluate Transaction: AssetExists, function returns "true" if an asset with given assetID exists');
             let check = await contract.evaluateTransaction('AssetExists', report.email);
             console.log(`*** Result: ${prettyJSONString(check.toString())}`);
+
+            //Creating and Updating Asset in couchDB start.
 
             if(check == "true"){
                 console.log('\n--> Submit Transaction: UpdateAsset, update asset with ID email, and update name and/or add new file and fileName');
@@ -66,6 +70,41 @@ async function main(report) {
                 }
             }
 
+
+            //Creating and Updating Asset in couchDB end.
+
+
+
+
+            //Getting all the assets start.
+            if(check == "true"){
+                console.log('\n--> Evaluate Transaction: ReadAsset, function returns an asset with a given assetID');
+                let result = await contract.evaluateTransaction('ReadAssetr', report.email);
+                console.log('*** Result: ID searching');
+                let r = result.toJSON();
+                console.log("Invoke Result:- ", r);
+                return r;
+            }
+            else{
+                return "No Reports Available";
+            }
+            //Getting all the assets end.
+
+
+            //Getting Base64 of index start.
+            if(check == "true"){
+                console.log('\n--> Evaluate Transaction: ReadAsset, function returns an asset with a given assetID');
+                let result = await contract.evaluateTransaction('ReadAssetf', report.email,report.index);
+                console.log('*** Result: ID searching'); 
+                let r = result.toJSON();
+                return r;
+            }
+            else{
+                return "No Reports Available";
+            }
+            //Getting Base64 of index end.
+
+
     
             // console.log('\n--> Submit Transaction: CreateAsset, creates new asset with ID email, name, file and filename arguments');
             // let result = await contract.submitTransaction('CreateAsset', report.email, report.patientName, report.file,report.fileName);
@@ -84,6 +123,7 @@ async function main(report) {
             //     return "Successfully updated the asset on the ledger";
             // }
 
+            
             
             
             

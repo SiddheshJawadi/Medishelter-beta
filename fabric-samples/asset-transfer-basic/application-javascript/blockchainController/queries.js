@@ -32,7 +32,7 @@ let medicalHistory = async(req) => {
   
  
     try {
-        const medsHistory = await main(req, 'query');
+        const medsHistory = await main(req, email);
         return { result:medsHistory };
     
     
@@ -48,16 +48,15 @@ let medicalHistory = async(req) => {
  * 
  * For querying Medical Document
  */
-let allmedicalHistory = async(req) => {
+let allmedicalHistory = async(report) => {
 
     // logger.info(req);
-   
+    console.log("Searchining for records of the user:-", report.email);
   
      try {
-         const allmedicalHistory = await main(req, 'queryAllMeds');
+         const allmedicalHistory = await main(report);
          return { result:allmedicalHistory };
-     
-     
+         
      } catch (err) {
          
          return { result: err };
