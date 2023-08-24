@@ -2,27 +2,30 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  /* background-color: #fff; */
+  background-size: 1000px;
 }
 
 .App {
   text-align: center;
+
 }
 
 .App-header {
-  /* background-color: #B5838D; */
-  background-image: url(blockchainbg.jpg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #8ec1d6;
+  /* background: white; Change background color to white */
+  /* background-image: url(bg-image.jpg); */
+
+
 }
 
 .logIn-form {

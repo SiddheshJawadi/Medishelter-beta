@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import Button from './Button/Button'
 import Axios from 'axios'
 import jwt_decode from 'jwt-decode'
 import './css/Login.css'
 import { Link } from 'react-router-dom'
+import Button from './Button/Button'
 
 const Login = (props) => {
   const [email, setEmail] = useState('')
@@ -42,10 +42,11 @@ const Login = (props) => {
   }
 
   return (
+    <div className='form-box'>
     <div className="logIn-form">
       <form onSubmit={handleSubmit}>
         <div>
-          <label style={{ margin: '8px' }} htmlFor="email">
+          <label style={{ margin: '10px' }} htmlFor="email">
             Email:
           </label>
           <input
@@ -61,7 +62,7 @@ const Login = (props) => {
           />
         </div>
         <div>
-          <label htmlFor="password">Password: </label>
+          <label style={{ margin: '10px' }} htmlFor="password">Password: </label>
           <input
             style={{ margin: '8px' }}
             className="Password"
@@ -81,12 +82,14 @@ const Login = (props) => {
         <div>
           <span style={{ margin: '8px' }}>
             Don't have an account?
+            <br />
             <Link to="/registration" tabIndex={5}>
               Register
             </Link>
           </span>
         </div>
       </form>
+    </div>
     </div>
   )
 }
