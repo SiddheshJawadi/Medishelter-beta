@@ -1,8 +1,9 @@
-* {
+/* * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-  }
+    background: white;
+  } */
   
   .App {
     text-align: center;
@@ -11,7 +12,7 @@
   .App-header {
     /* background-color: #B5838D; */
     /* background-image: url(blockchainbg.jpg); */
-    min-height: 100vh;
+    /* min-height: 100vh; */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -22,22 +23,23 @@
   
   body {
     font-family: 'Poppins', sans-serif;
-    background-color: #8ec1d6;
-    
   }
   
   .logIn-form {
     
-    margin-top: 100px;
-    margin-bottom: 100px;
-    width: 300px;
-    height: 420px;
+    /* margin-top: 100px; */
+    /* margin-bottom: 100px; */
+    /* width: 300px;
+    height: 630px; */
+    /* margin:auto; */
+    height:fit-content;
     background-color: #fff;
     border-radius: 10px;
+    /* background: white; */
   }
   .logIn-form h1 {
     /* text-align: center; */
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
     font-size: 15px;
     font-weight: 60;
     color: black;
@@ -46,12 +48,21 @@
     text-align: center;
     font-size: 12px;
     font-weight: 600;
+    width: fit-content ;
     color: #6D6875;
     padding: 10px 10px;
+    /* margin-bottom: 10px; */
+    background-color: #fff;
+    align-items: center;
+    display: inline-block;
+    width: 80%;
+    /* height: 25px; */
+    margin-left: 28px; 
+    margin-right: 10px auto;
   }
   
   .logIn-form input {
-    display: block;
+    display: flex;
     width: 80%;
     height: 25px;
     margin-left: 28px; 
@@ -61,9 +72,11 @@
     padding: 0 10px;
     font-size: 16px;
     color: black;
+    margin-bottom: 10px;
   }
   .logIn-form button {
-    background-color: #FFCDB2;
+    /* background-color: #fa1c1c; */
+    background: #fa1c1c;
     color: #fff;
     cursor: pointer;
     font-size: 15px;
@@ -88,4 +101,17 @@
     padding: 0 10px;
     font-size: 16px;
     color: black;
+    margin-bottom: 10px;
+  }
+
+  .logIn-form span {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6D6875;
+    padding: 10px 10px;
+    /* margin-bottom: 10px; */
+    background-color: #fff;
+    display:block;
+
   }

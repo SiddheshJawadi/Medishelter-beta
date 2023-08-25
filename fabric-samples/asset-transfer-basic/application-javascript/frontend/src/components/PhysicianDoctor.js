@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './css/Navigation.css'
 import './css/Patient.css'
-import Button from './Button/Button'
 import axios from 'axios'
 
 function RadiologistDoctor() {

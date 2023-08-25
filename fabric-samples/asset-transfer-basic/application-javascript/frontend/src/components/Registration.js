@@ -130,6 +130,7 @@ export default function Registration() {
         <div>
           <span>
             Already have an account?
+            <br></br>
             <Link to="/login">Login</Link>
           </span>
         </div>

@@ -70,7 +70,7 @@ nav ul li a:hover {
   display: block;
   padding: 10px;
   background-color: #FF5503;
-  color: white;
+  /* color: white; */
   border-color: #FF5503;
   font-size: 16px;
 }

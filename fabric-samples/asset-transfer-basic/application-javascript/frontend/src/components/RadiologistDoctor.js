@@ -3,7 +3,6 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import './css/Navigation.css'
 import './css/Patient.css'
-import Button from './Button/Button'
 
 function RadiologistDoctor() {
   const [name, setName] = useState('')
