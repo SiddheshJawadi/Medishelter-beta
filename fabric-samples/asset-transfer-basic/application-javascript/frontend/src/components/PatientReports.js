@@ -3,6 +3,8 @@ import axios from 'axios';
 import './css/Navigation.css';
 import './css/reportsdwnload.css';
 import { Link } from 'react-router-dom';
+import MainHeader from './MainHeader/MainHeader1'
+import Foot from './Footer/Footer'
 
 function Reports() {
   const [reports, setReports] = useState([]);
@@ -16,6 +18,11 @@ function Reports() {
   const handleClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const handleEditProfile = () => {
+    localStorage.removeItem('token')
+    window.location.href = '/editprofile'
+  }
 
   useEffect(() => {
     // Fetch report filenames from the Node.js API
@@ -55,6 +62,8 @@ function Reports() {
   };
 
   return (
+    <>
+    <div className='nav'><MainHeader /></div>
     <div>
       <nav>
         <ul>
@@ -62,7 +71,7 @@ function Reports() {
             <Link to="/patient">Home</Link>
           </li>
           <li>
-            <Link to="/download">Prescription</Link>
+            <Link to="/patient/prescription">Prescription</Link>
           </li>
           <li>
             <Link to="/patient/report">Report</Link>
@@ -80,7 +89,7 @@ function Reports() {
               {isMenuOpen && (
                 <ul className="menu-options">
                   <li>
-                    <Link to="/editprofile">Edit Profile</Link>
+                  <button onClick={handleEditProfile}>Edit Profile</button>
                   </li>
                   <li>
                     <button onClick={handleLogout}>Logout</button>
@@ -121,6 +130,8 @@ function Reports() {
         </div>
       </div>
     </div>
+    <div><Foot /></div>
+    </>
   );
 }
 

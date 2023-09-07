@@ -1,0 +1,34 @@
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4rem;
+    display:flex;
+    align-items: center;
+    background: #010047;
+    padding: 0 2rem;
+  }
+  
+  .main-header h1 {
+    color: white;
+    margin:auto;
+    margin-left: 10px;
+    background: #010047;
+    font-weight: bold;
+  }
+
+  .main-header img{
+    border-radius: 15px;
+    /* margin: auto; */
+    width: 50px;
+    height: 50px;
+  }
+
+  .main-header sup{
+    font-size: 15px;
+    color:red;
+    font-weight: bold;
+  }
+
+

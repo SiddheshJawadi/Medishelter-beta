@@ -6,7 +6,7 @@ nav {
 
 nav ul {
   list-style: none;
-  margin: 0;
+  margin-top: 10px;
   padding: 0;
 }
 
@@ -23,8 +23,8 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-  background-color: beige;
-  color: orange;
+  background-color: white;
+  color: black;
 }
 .menu-icon {
   display: flex;
@@ -32,7 +32,7 @@ nav ul li a:hover {
   justify-content: space-between;
   height: 18px;
   width: 24px;
-  background: #FF5503;
+  background: black;
  
 }
 
@@ -40,7 +40,7 @@ nav ul li a:hover {
   height: 2px;
   width: 100%;
   background-color: white;
-  border-color: #FF5503;
+  border-color: #010047;
 }
 .menu-options {
   list-style: none;
@@ -49,8 +49,8 @@ nav ul li a:hover {
   position: absolute;
   top: 40px; /* adjust this value to position the menu options vertically */
   left: 0;
-  background-color: #FF5503;
-  border: 1px solid #ccc;
+  background-color: #010047;
+  border: 1px solid #fff;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
@@ -69,13 +69,13 @@ nav ul li a:hover {
   width: 100%; */
   display: block;
   padding: 10px;
-  background-color: #FF5503;
-  /* color: white; */
-  border-color: #FF5503;
+  background-color: #010047;
+  color: white;
+  border-color: white;
   font-size: 16px;
 }
 
 .menu-options li button:hover {
-  background-color: beige;
-  color: orange;
+  background-color: white;
+  color: black;
 }

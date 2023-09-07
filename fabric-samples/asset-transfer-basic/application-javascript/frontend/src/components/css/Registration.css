@@ -46,7 +46,7 @@
   }
   .logIn-form p {
     text-align: center;
-    font-size: 12px;
+    font-size: 18px;
     font-weight: 600;
     width: fit-content ;
     color: #6D6875;
@@ -106,7 +106,7 @@
 
   .logIn-form span {
     text-align: center;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     color: #6D6875;
     padding: 10px 10px;

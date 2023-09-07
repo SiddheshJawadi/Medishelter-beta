@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-
+import MainHeader from './MainHeader/MainHeader1'
+import Foot from './Footer/Footer'
 import Navigation from './MainHeader/Navigation'
 import { Link } from 'react-router-dom'
 import './css/Navigation.css'
@@ -30,12 +31,18 @@ const Patient = () => {
     localStorage.removeItem('token')
     window.location.href = '/login'
   }
+  const handleEditProfile = () => {
+    localStorage.removeItem('token')
+    window.location.href = '/editprofile'
+  }
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
   return (
+    <>
+    <div className='nav'><MainHeader /></div>
     <div>
       <div className="welcome">
         <h1>Welcome {name}!</h1>
@@ -67,7 +74,7 @@ const Patient = () => {
             <Link to="/patient">Home</Link>
           </li>
           <li>
-            <Link to="/blankprescription">Prescription</Link>
+            <Link to="/patient/prescription">Prescription</Link>
           </li>
           <li>
             <Link to="/patient/report">Report</Link>
@@ -86,10 +93,7 @@ const Patient = () => {
       {isMenuOpen && (
         <ul className="menu-options">
           <li>
-            <Link to="/editprofile">
-              Edit Profile
-              
-            </Link>
+            <button onClick={handleEditProfile}>Edit Profile</button>
           </li>
           <li>
           <button onClick={handleLogout}>Logout</button>
@@ -102,6 +106,8 @@ const Patient = () => {
     </nav>
     </div>
     </div>
+    <div><Foot /></div>
+    </>
     
   )
 }

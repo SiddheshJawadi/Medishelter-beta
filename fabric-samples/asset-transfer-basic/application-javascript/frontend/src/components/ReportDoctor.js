@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Axios from 'axios';
 import './css/Registration.css';
 import { Link } from 'react-router-dom';
+import MainHeader from './MainHeader/MainHeader1'
+import Foot from './Footer/Footer'
 
 const Navigation = ({ handleLogout }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,18 +11,24 @@ const Navigation = ({ handleLogout }) => {
   const handleClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+  const handleEditProfile = () => {
+    localStorage.removeItem('token')
+    window.location.href = '/editprofile'
+  }
 
   return (
+    <>
+    <div className='nav'><MainHeader /></div>
     <nav>
       <ul>
         <li>
-          <Link to="/radiologistdoctor">Home</Link>
+          <Link to="/reportDoctor">Home</Link>
         </li>
+        {/* <li>
+          <Link to="/prescription">Prescription</Link>
+        </li> */}
         <li>
-          <Link to="/blankprescription">Prescription</Link>
-        </li>
-        <li>
-          <Link to="/reportdoctor">Report</Link>
+          <Link to="/reportDoctor/upload">Report</Link>
         </li>
         <li>
           <div>
@@ -34,7 +42,7 @@ const Navigation = ({ handleLogout }) => {
             {isMenuOpen && (
               <ul className="menu-options">
                 <li>
-                  <Link to="/editprofile">Edit Profile</Link>
+                <button onClick={handleEditProfile}>Edit Profile</button>
                 </li>
                 <li>
                   <button onClick={handleLogout}>Logout</button>
@@ -45,6 +53,8 @@ const Navigation = ({ handleLogout }) => {
         </li>
       </ul>
     </nav>
+    <div><Foot /></div>
+    </>
   );
 };
 
@@ -93,21 +103,22 @@ const ReportDoctor = () => {
   return (
     <div>
       <Navigation handleLogout={handleLogout} />
-      <div className="logIn-form">
+      <div className="logIn-form" style={{marginTop: '200px'}}>
         <form onSubmit={handleSubmit}>
-          <label style={{ margin: '8px' }} htmlFor="email">
-            Name:
-            <input type="text" value={name} onChange={handleNameChange} />
+        <label style={{ color: 'grey', margin: '10px', textAlign: 'center', fontSize: '18px', fontWeight: '600', width: 'fit-content', marginLeft: '100px', marginBottom: '10px' }} htmlFor="email">
+          Name
+        <input type="text" placeholder='Enter Name' value={name} onChange={handleNameChange} style={{marginTop:'10px'}}/>
+        </label>
+
+          <br />
+          <label style={{color:'grey',margin: '10px',textAlign:'center',fontSize: '18px',fontWeight:'600',width: 'fit-content',marginLeft:'100px'  }} htmlFor="email">
+            <b style={{marginBottom:'20px'}}>Email</b>
+            <input type="email" placeholder='Enter Email' value={email} onChange={handleEmailChange} style={{marginTop:'10px'}} />
           </label>
           <br />
-          <label style={{ margin: '8px' }} htmlFor="email">
-            Email:
-            <input type="email" value={email} onChange={handleEmailChange} />
-          </label>
-          <br />
-          <label style={{ margin: '8px' }} htmlFor="email">
-            File:
-            <input type="file" onChange={handleFileChange} />
+          <label style={{color:'grey',margin: '10px',textAlign:'center',fontSize: '18px',fontWeight:'600',width: 'fit-content',marginLeft:'110px',marginBottom:'900000px'  }} htmlFor="email">
+            File
+            <input type="file" onChange={handleFileChange} style={{marginTop:'10px' ,fontSize: '14px'}}/>
           </label>
           <br />
           <button type="submit">Submit</button>

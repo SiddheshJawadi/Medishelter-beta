@@ -111,7 +111,7 @@ const verifyToken = (req, res, next) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/');
+    cb(null, '');
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -143,7 +143,7 @@ app.post('/report', upload.single('file'), async (req, res) => {
     }
 
     console.log("Report data is ", report);
-    let response = await queries.createMedicalDoc(report);
+    let response = await queries.createReport(report);
     console.log(response.result);
 
     if (response.result === "Successfully committed the change to the ledger by the peer" ||
@@ -388,7 +388,7 @@ app.get('/patient/reports', verifyToken, async (req, res) => {
     var report = {
       email:decoded.email,
     }
-    let response = await queries.allmedicalHistory(report);
+    let response = await queries.fetchReports(report);
     console.log("Response - ", response)
     const jsonString = Buffer.from(response.result.data).toString('utf8');
     console.log("JSONSTRING- ", jsonString)
@@ -410,10 +410,10 @@ app.get('/patient/reports/:index', verifyToken, async (req, res) => {
       email: decoded.email,
       index: req.params.index,
     };
-    let response = await queries.allmedicalHistory(report);
+    let response = await queries.downloadReport(report);
     const jsonString = Buffer.from(response.result.data).toString('utf8');
     const parsedData = JSON.parse(jsonString);
-    const filePath = 'uploads/' + parsedData.filename;
+    const filePath = parsedData.filename;
     fs.writeFile(filePath, parsedData.file, 'base64', function(err) {
       if (err) {
         res.status(500).json({ message: 'Error writing file' });
@@ -469,5 +469,5 @@ app.use(
 );
 
 app.listen(3000, () => {
-  console.log(`Server is running on port 3000.`)
+  console.log(`Server is running on port 3000.`)
 })

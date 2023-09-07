@@ -1,6 +1,7 @@
 .table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 70px;
   }
   
   .table th,
@@ -27,7 +28,6 @@
  
 body {
   height: 100%;
-  margin: 0;
 }
 
 .centered-container {
@@ -38,5 +38,5 @@ body {
 }
 
 h1 {
-  margin-top: 50px;
+  margin-top: 90px;
 }

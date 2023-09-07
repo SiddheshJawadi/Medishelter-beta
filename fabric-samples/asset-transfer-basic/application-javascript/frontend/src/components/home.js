@@ -2,13 +2,19 @@ import React from 'react'
 import './css/Home.css'
 import { Stack } from '@mui/material'
 import Lanpic from './Lanpic.png';
+import MainHeader from './MainHeader/MainHeader'
+import Foot from './Footer/Footer'
+
 
 
 
 function home() {
   return (
     <>
+    <div className='nav'><MainHeader /></div>
     <div className='home'>
+        
+
         <h1>About US</h1> 
         <Stack spacing={2} direction='row'> 
             <p>Healthcare systems are an essential aspect of modern society, providing crucial medical services to millions of people around the world.
@@ -51,14 +57,15 @@ One of the standout advantages of using Hyperledger Fabric is its implementation
     </div>
     <div className='Teams'>
         <h1>Our Team Members</h1>
-        <Stack spacing={2} direction='row'> 
-            <p>Anvi<br />BackEnd</p>
-            <p>Shruti<br />FrontEnd</p>
-            <p>Siddhesh<br />BlockChain</p>
-            <p>Tanish<br />BlockChain</p>
-            <p>Tanmay<br />FrontEnd</p>
+        <Stack spacing={5} direction='row'> 
+            <p>Anvi</p>
+            <p>Shruti</p>
+            <p>Siddhesh</p>
+            <p>Tanish</p>
+            <p>Tanmay</p>
         </Stack>
     </div>
+    <div className='foot'><Foot /></div>
     </>
   )
 }
