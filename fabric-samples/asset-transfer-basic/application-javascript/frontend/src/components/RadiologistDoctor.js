@@ -3,6 +3,8 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import './css/Navigation.css'
 import './css/Patient.css'
+import MainHeader from './MainHeader/MainHeader1'
+import Foot from './Footer/Footer'
 
 function RadiologistDoctor() {
   const [name, setName] = useState('')
@@ -27,12 +29,18 @@ function RadiologistDoctor() {
     localStorage.removeItem('token')
     window.location.href = '/login'
   }
+  const handleEditProfile = () => {
+    localStorage.removeItem('token')
+    window.location.href = '/editprofile'
+  }
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const handleClick = () => {
     setIsMenuOpen(!isMenuOpen)
   }
   return (
+    <>
+    <div className='nav'><MainHeader /></div>
     <div>
       <div>
         <div class="welcome">
@@ -66,13 +74,13 @@ function RadiologistDoctor() {
         <nav>
           <ul>
             <li>
-              <Link to="/radiologistdoctor">Home</Link>
+              <Link to="/reportDoctor">Home</Link>
             </li>
+            {/* <li>
+              <Link to="/prescription">Prescription</Link>
+            </li> */}
             <li>
-              <Link to="/blankprescription">Prescription</Link>
-            </li>
-            <li>
-              <Link to="/reportdoctor">Report</Link>
+              <Link to="/reportDoctor/upload">Report</Link>
             </li>
 
             <li>
@@ -87,7 +95,7 @@ function RadiologistDoctor() {
                 {isMenuOpen && (
                   <ul className="menu-options">
                     <li>
-                      <Link to="/editprofile">Edit Profile</Link>
+                    <button onClick={handleEditProfile}>Edit Profile</button>
                     </li>
                     <li>
                       <button onClick={handleLogout}>Logout</button>
@@ -100,6 +108,8 @@ function RadiologistDoctor() {
         </nav>
       </div>
     </div>
+    <div><Foot /></div>
+    </>
   )
 }
 

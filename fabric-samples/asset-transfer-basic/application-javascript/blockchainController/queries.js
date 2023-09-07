@@ -1,15 +1,15 @@
-var main = require('../invoke')
+var invoke = require('../invoke')
 //var queryMeds = require('../query');
 //var DailyRotateFile = require("winston-daily-rotate-file");
 /**
  
  * For creating Medical Document
  */
-let createMedicalDoc = async (report) => {
+let createReport= async (report) => {
 
  console.log("data is:",report.email);
     try {
-     const meddoc =  await main(report);
+     const meddoc =  await invoke.addReports(report);
         console.log("meddoc ", meddoc);
        return { result: meddoc };
     
@@ -32,7 +32,7 @@ let medicalHistory = async(req) => {
   
  
     try {
-        const medsHistory = await main(req, email);
+        const medsHistory = await invoke(req, email);
         return { result:medsHistory };
     
     
@@ -48,13 +48,13 @@ let medicalHistory = async(req) => {
  * 
  * For querying Medical Document
  */
-let allmedicalHistory = async(report) => {
+let fetchReports = async(report) => {
 
     // logger.info(req);
     console.log("Searchining for records of the user:-", report.email);
   
      try {
-         const allmedicalHistory = await main(report);
+         const allmedicalHistory = await invoke.displayReports(report);
          return { result:allmedicalHistory };
          
      } catch (err) {
@@ -64,4 +64,20 @@ let allmedicalHistory = async(report) => {
  
  };
 
-module.exports = {createMedicalDoc, medicalHistory, allmedicalHistory};
+ let downloadReport = async(report) => {
+
+    // logger.info(req);
+    console.log("Searchining for records of the user:-", report.email);
+  
+     try {
+         const allmedicalHistory = await invoke.downloadReport(report);
+         return { result:allmedicalHistory };
+         
+     } catch (err) {
+         
+         return { result: err };
+     }
+ 
+ };
+
+module.exports = {createReport, fetchReports, downloadReport};

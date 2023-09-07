@@ -35,26 +35,27 @@ class AssetTransfer extends Contract {
 }
 
 
-    async UpdateAsset(ctx, email, name, file, fileName) {
+async UpdateAsset(ctx, email, name, file, fileName) {
     console.log("Entered UpdateAsset Function");
     const exists = await this.AssetExists(ctx, email);
     if (!exists) {
-        throw new Error(`The asset ${email} does not exist`);
+      throw new Error(`The asset ${email} does not exist`);
     }
-
+  
     const assetString = await this.ReadAsset(ctx, email);
     const asset = JSON.parse(assetString);
-
+  
     // Update the other attributes if needed
     asset.name = name;
-
-    // Append the new file and its name to the arrays
-    asset.files.push(file);
-    asset.fileNames.push(fileName);
-
+  
+    // Insert the new file and its name at the beginning of the arrays
+    asset.files.unshift(file);
+    asset.fileNames.unshift(fileName);
+  
     await ctx.stub.putState(email, Buffer.from(JSON.stringify(asset)));
     return JSON.stringify(asset);
-}
+  }
+  
 
 
     async DeleteAsset(ctx, email) {
@@ -80,40 +81,37 @@ class AssetTransfer extends Contract {
     }
 
     async ReadAssetr(ctx, email) {
-    const assetJSON = await ctx.stub.getState(email);
-    if (!assetJSON || assetJSON.length === 0) {
-        throw new Error(`The asset ${email} does not exist`);
+        const assetJSON = await ctx.stub.getState(email);
+        if (!assetJSON || assetJSON.length === 0) {
+            throw new Error(`The asset ${email} does not exist`);
+        }
+    
+        const assetString = assetJSON.toString('utf8'); // Convert buffer to a string
+        const asset = JSON.parse(assetString); // Parse the JSON string
+        
+        var data = {
+            fileNames: asset.fileNames
+        };
+        
+        return data;
     }
-
-    const assetString = assetJSON.toString('utf8'); // Convert buffer to a string
-    const asset = JSON.parse(assetString); // Parse the JSON string
-    
-    var data = {
-        fileNames: asset.fileNames
-    };
-    
-    return data;
-}
 
     async ReadAssetf(ctx, email,index) {
-    const assetJSON = await ctx.stub.getState(email);
-    if (!assetJSON || assetJSON.length === 0) {
-        throw new Error(`The asset ${email} does not exist`);
+        const assetJSON = await ctx.stub.getState(email);
+        if (!assetJSON || assetJSON.length === 0) {
+            throw new Error(`The asset ${email} does not exist`);
+        }
+        
+        const assetString = assetJSON.toString('utf8'); // Convert buffer to a string
+        const asset = JSON.parse(assetString); // Parse the JSON string
+        
+        var data = {
+            filename: asset.fileNames[index],
+            file : asset.files[index]
+        }
+        
+        return data;
     }
-    
-    const assetString = assetJSON.toString('utf8'); // Convert buffer to a string
-    const asset = JSON.parse(assetString); // Parse the JSON string
-    
-    var data = {
-        filename: asset.fileNames[index],
-        file : asset.files[index]
-    }
-    
-    return data;
-}
-
-
-
 
     async TransferAsset(ctx, email, newOwner) {
         const assetString = await this.ReadAsset(ctx, email);
@@ -144,4 +142,4 @@ class AssetTransfer extends Contract {
     }
 }
 
-module.exports = AssetTransfer;
+module.exports = AssetTransfer;

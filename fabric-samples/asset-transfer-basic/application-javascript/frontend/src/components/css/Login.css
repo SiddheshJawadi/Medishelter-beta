@@ -51,10 +51,19 @@
   }
   .logIn-form p {
     text-align: center;
-    font-size: 12px;
+    /* font-size: 12px; */
     font-weight: 600;
+    width: fit-content ;
     color: #6D6875;
     padding: 10px 10px;
+    /* margin-bottom: 10px; */
+    background-color: #fff;
+    align-items: center;
+    display: inline-block;
+    width: 80%;
+    /* height: 25px; */
+    margin-left: 28px; 
+    margin-right: 10px auto;
   }
   
   .logIn-form input {

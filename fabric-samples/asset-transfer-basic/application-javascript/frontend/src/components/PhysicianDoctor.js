@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import './css/Navigation.css'
 import './css/Patient.css'
 import axios from 'axios'
+import MainHeader from './MainHeader/MainHeader1'
+import Foot from './Footer/Footer'
 
 function RadiologistDoctor() {
   const [name, setName] = useState('')
@@ -32,7 +34,14 @@ function RadiologistDoctor() {
   const handleClick = () => {
     setIsMenuOpen(!isMenuOpen)
   }
+
+  const handleEditProfile = () => {
+    localStorage.removeItem('token')
+    window.location.href = '/editprofile'
+  }
   return (
+    <>
+    <div className='nav'><MainHeader /></div>
     <div>
       <div>
         <div class="welcome">
@@ -66,13 +75,13 @@ function RadiologistDoctor() {
         <nav>
           <ul>
             <li>
-              <Link to="/physiciandoctor">Home</Link>
+              <Link to="/physicianDoctor">Home</Link>
             </li>
             <li>
-              <Link to="/physiciandoctor/prescription">Prescription</Link>
+              <Link to="/physicianDoctor/prescription">Prescription</Link>
             </li>
             <li>
-              <Link to="/blankreport">Report</Link>
+              <Link to="/physicianDoctor/report">Report</Link>
             </li>
 
             <li>
@@ -100,6 +109,8 @@ function RadiologistDoctor() {
         </nav>
       </div>
     </div>
+    <div><Foot /></div>
+    </>
   )
 }
 

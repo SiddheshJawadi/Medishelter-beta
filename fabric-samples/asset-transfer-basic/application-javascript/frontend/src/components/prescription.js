@@ -5,6 +5,8 @@ import './css/Prescription.css'
 import './css/Patient.css'
 import { Link } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
+import MainHeader from './MainHeader/MainHeader1'
+import Foot from './Footer/Footer'
 
 function MedicineField({ id, onChange }) {
   const [medicineName, setMedicineName] = useState('')
@@ -34,12 +36,14 @@ function MedicineField({ id, onChange }) {
         onChange={handleMedicineNameChange}
         placeholder="Medicine Name"
       />
+      <label>Quantity</label>
       <input
         type="number"
         value={quantity}
         onChange={handleQuantityChange}
         placeholder="Quantity"
       />
+      <label>Usage:</label>
       <input
         type="text"
         value={usage}
@@ -116,18 +120,20 @@ function App() {
   }
 
   return (
+    <>
+    <div className='nav'><MainHeader /></div>
     <div>
       <div>
         <nav>
           <ul>
             <li>
-              <Link to="/physiciandoctor">Home</Link>
+              <Link to="/physicianDoctor">Home</Link>
             </li>
             <li>
-              <Link to="/physiciandoctor/prescription">Prescription</Link>
+              <Link to="/physicianDoctor/prescription">Prescription</Link>
             </li>
             <li>
-              <Link to="/blankreport">Report</Link>
+              <Link to="/reportDoctor">Report</Link>
             </li>
 
             <li>
@@ -194,12 +200,15 @@ function App() {
               value={remarks}
               onChange={handleRemarksChange}
               placeholder="Remarks"
+              style={{fontFamily: 'Poppins, sans-serif'}}
             ></textarea>
           </div>
           <button type="submit">Submit</button>
         </form>
       </div>
     </div>
+    <div><Foot /></div>
+    </>
   )
 }
 

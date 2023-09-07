@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState} from 'react'
 import Axios from 'axios'
 import './css/Registration.css'
 import { Link } from 'react-router-dom'
+import MainHeader from './MainHeader/MainHeader1'
+import Foot from './Footer/Footer'
 
 export default function Registration() {
   const [name, setName] = useState('')
@@ -41,6 +43,8 @@ export default function Registration() {
     })
   }
   return (
+    <>
+    <div className='nav'><MainHeader /></div>
     <div className="logIn-form">
       <form onSubmit={handleSubmit}>
         <p>First Name</p>
@@ -117,12 +121,16 @@ export default function Registration() {
         <p>Date of Birth</p>
         <input
           className="DOB"
-          type="date"
+          type="text"
           name="dob"
-          placeholder="Date of Birth"
+          placeholder='Select Date'
           onChange={(e) => {
             setDob(e.target.value)
           }}
+          onFocus={(e) => {(e.target.type = "date");
+                          (e.target.placeholder="dd-mm-yyyy")}}
+          onBlur={(e) => (e.target.type = "text")}
+
           required
         />
 
@@ -136,5 +144,8 @@ export default function Registration() {
         </div>
       </form>
     </div>
+    <div><Foot /></div>
+
+    </>
   )
 }

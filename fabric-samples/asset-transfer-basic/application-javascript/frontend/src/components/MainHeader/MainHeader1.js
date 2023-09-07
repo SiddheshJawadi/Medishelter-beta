@@ -1,6 +1,6 @@
 import React from "react";
 import logo from './LOGO.png';
-import classes from "./MainHeader.module.css";
+import classes from "./MainHeader1.module.css";
 import { Button , ButtonGroup,Stack } from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
@@ -27,8 +27,8 @@ const MainHeader = (props) => {
       <ButtonGroup variant="contained" color="primary" >
       <Stack spacing={2} direction='row'>
 
-      <Button onClick={handleLogin} endIcon={<LoginIcon />}>Login </Button>
-      <Button onClick={handleRegister} endIcon={<AppRegistrationIcon />}>Register</Button>
+      {/* <Button onClick={handleLogin} endIcon={<LoginIcon />}>Login </Button>
+      <Button onClick={handleRegister} endIcon={<AppRegistrationIcon />}>Register</Button> */}
       </Stack>
       </ButtonGroup>
       

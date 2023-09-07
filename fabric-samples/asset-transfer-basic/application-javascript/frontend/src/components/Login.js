@@ -4,6 +4,11 @@ import jwt_decode from 'jwt-decode'
 import './css/Login.css'
 import { Link } from 'react-router-dom'
 import Button from './Button/Button'
+import MainHeader from './MainHeader/MainHeader1'
+import Foot from './Footer/Footer'
+import { grey } from '@mui/material/colors'
+
+
 
 const Login = (props) => {
   const [email, setEmail] = useState('')
@@ -22,11 +27,11 @@ const Login = (props) => {
         if (response.data.role === 'Patient') {
           window.location.href = '/patient'
         } else if (response.data.role === 'Doctor - Radiologist') {
-          window.location.href = '/radiologistdoctor'
+          window.location.href = '/reportDoctor'
 
         } 
         else if (response.data.role === 'Doctor - Physician') {
-          window.location.href = '/physiciandoctor'
+          window.location.href = '/physicianDoctor'
 
         } 
         else {
@@ -42,19 +47,22 @@ const Login = (props) => {
   }
 
   return (
+    <>
+    
+    <div className='nav'><MainHeader /></div>
     <div className='form-box'>
     <div className="logIn-form">
       <form onSubmit={handleSubmit}>
         <div>
-          <label style={{ margin: '10px' }} htmlFor="email">
-            Email:
+          <label style={{ color:'grey',margin: '10px',textAlign:'center',fontSize: '18px',fontWeight:'600',width: 'fit-content',marginLeft:'100px' }} htmlFor="email">
+            Email
           </label>
           <input
-            style={{ margin: '8px' }}
+            style={{ marginLeft: '30px',marginTop:'8px',marginBottom:'18px' }}
             className="Email"
             type="text"
             name="email"
-            placeholder="Email ..."
+            placeholder="abc@gmail.com"
             onChange={(e) => {
               setEmail(e.target.value)
             }}
@@ -62,13 +70,13 @@ const Login = (props) => {
           />
         </div>
         <div>
-          <label style={{ margin: '10px' }} htmlFor="password">Password: </label>
+          <label style={{color:'grey',margin: '10px',textAlign:'center',fontSize: '18px',fontWeight:'600',width: 'fit-content',marginLeft:'85px'  }} htmlFor="password">Password </label>
           <input
-            style={{ margin: '8px' }}
+            style={{  marginLeft: '30px',marginTop:'8px',marginBottom:'18px' }}
             className="Password"
             type="password"
             name="password"
-            placeholder="Password ..."
+            placeholder="Enter Password"
             onChange={(e) => {
               setPassword(e.target.value)
             }}
@@ -91,6 +99,8 @@ const Login = (props) => {
       </form>
     </div>
     </div>
+    <div><Foot /></div>
+    </>
   )
 }
 
