@@ -7,7 +7,7 @@
   .table th,
   .table td {
     padding: 8px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid #ddd;
   }
   
@@ -16,11 +16,11 @@
   }
   
   .table tr:nth-child(even) {
-    background-color: #f9f9f9;
+    /* background-color: #f9f9f9; */
   }
   
   .table tr:hover {
-    background-color: #e6e6e6;
+    /* background-color: #e6e6e6; */
   }
   .table-container {
     margin-top: 10px;
@@ -38,5 +38,6 @@ body {
 }
 
 h1 {
+  text-align: center;
   margin-top: 90px;
 }

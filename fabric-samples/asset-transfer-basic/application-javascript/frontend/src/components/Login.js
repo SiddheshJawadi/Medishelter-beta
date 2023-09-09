@@ -6,7 +6,8 @@ import { Link } from 'react-router-dom'
 import Button from './Button/Button'
 import MainHeader from './MainHeader/MainHeader1'
 import Foot from './Footer/Footer'
-import { grey } from '@mui/material/colors'
+import Lanpic from './Lanpic.png';
+
 
 
 
@@ -50,6 +51,7 @@ const Login = (props) => {
     <>
     
     <div className='nav'><MainHeader /></div>
+    <div className='pic'><img src={Lanpic}/></div>
     <div className='form-box'>
     <div className="logIn-form">
       <form onSubmit={handleSubmit}>

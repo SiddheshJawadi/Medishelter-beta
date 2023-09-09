@@ -1,18 +1,11 @@
 /* Common styles for headings */
 .home h1 {
     text-decoration-line: underline;
-    /* margin-bottom: 20px; */
     padding-left: 10px;
     color: #263354;
     text-align: left;
     padding-top: 50px;
 }
-
-/* Styles for the 'home' section */
-/* .home {
-    padding: 50px 0;
-    text-align: left;
-} */
 
 .home p {
     padding-top: 10px;

@@ -5,6 +5,9 @@ import './css/reportsdwnload.css';
 import { Link } from 'react-router-dom';
 import MainHeader from './MainHeader/MainHeader1'
 import Foot from './Footer/Footer'
+import DownloadIcon from '@mui/icons-material/Download';
+
+import { Button , ButtonGroup,Stack } from "@mui/material";
 
 function Reports() {
   const [reports, setReports] = useState([]);
@@ -119,9 +122,10 @@ function Reports() {
                 <tr key={index}>
                   <td>{item}</td>
                   <td>
-                    <button onClick={() => downloadFile(index,item)}>
+                    {/* <button onClick={() => downloadFile(index,item)}>
                       Download
-                    </button>
+                    </button> */}
+                    <Button varient="contained" onClick={() => downloadFile(index,item)} endIcon={<DownloadIcon />}>Download </Button>
                   </td>
                 </tr>
               ))}

@@ -48,25 +48,6 @@ const Patient = () => {
         <h1>Welcome {name}!</h1>
         <p>Thanks for visiting. Feel free to look around.</p>
       </div>
-      {/* <nav>
-        <ul>
-          <li>
-            <Link to="/patient">Home</Link>
-          </li>
-          <li>
-            <Link to="/patient/prescription">Prescription</Link>
-          </li>
-          <li>
-            <Link to="/patient/report">Report</Link>
-          </li>
-          <li>
-            <Link to="/patient/about">Edit Profile</Link>
-          </li>
-          <li>
-            <Button onClick={handleLogout}>Logout</Button>
-          </li>
-        </ul>
-      </nav> */}
       <div>
        <nav>
         <ul>
