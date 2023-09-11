@@ -5,7 +5,7 @@ var invoke = require('../invoke')
  
  * For creating Medical Document
  */
-let createReport= async (report) => {
+let CreateReport= async (report) => {
 
  console.log("data is:",report.email);
     try {
@@ -48,7 +48,7 @@ let medicalHistory = async(req) => {
  * 
  * For querying Medical Document
  */
-let fetchReports = async(report) => {
+let FetchReports = async(report) => {
 
     // logger.info(req);
     console.log("Searchining for records of the user:-", report.email);
@@ -64,7 +64,7 @@ let fetchReports = async(report) => {
  
  };
 
- let downloadReport = async(report) => {
+ let DownloadReport = async(report) => {
 
     // logger.info(req);
     console.log("Searchining for records of the user:-", report.email);
@@ -80,4 +80,4 @@ let fetchReports = async(report) => {
  
  };
 
-module.exports = {createReport, fetchReports, downloadReport};
+module.exports = {CreateReport, FetchReports, DownloadReport};

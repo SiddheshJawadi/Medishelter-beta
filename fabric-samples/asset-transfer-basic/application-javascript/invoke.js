@@ -91,7 +91,7 @@ async function addReports(report){
         if (check == "true") {
             console.log('\n--> Submit Transaction: UpdateAsset, update asset with ID email, and update name and/or add new file and fileName');
             console.log(report.email);
-            let result = await contract.submitTransaction('UpdateAsset', report.email, report.patientName, report.file, report.fileName);
+            let result = await contract.submitTransaction('AddReport', report.email, report.patientName, report.file, report.fileName);
             console.log('*** Result: committed');
             if (`${result}` !== '') {
                 console.log(`*** Result: ${prettyJSONString(result.toString())}`);
@@ -99,7 +99,7 @@ async function addReports(report){
             }
         } else if (check == "false") {
             console.log('\n--> Submit Transaction: CreateAsset, creates new asset with ID email, name, file, and filename arguments');
-            let result = await contract.submitTransaction('CreateAsset', report.email, report.patientName, report.file, report.fileName);
+            let result = await contract.submitTransaction('CreateReport', report.email, report.patientName, report.file, report.fileName);
             console.log('*** Result: committed');
             if (`${result}` !== '') {
                 console.log(`*** Result: ${prettyJSONString(result.toString())}`);
@@ -135,7 +135,7 @@ async function displayReports(report){
         //Start.
         if (check == "true") {
             console.log('\n--> Evaluate Transaction: ReadAsset, function returns an asset with a given assetID');
-            let result = await contract.evaluateTransaction('ReadAssetr', report.email);
+            let result = await contract.evaluateTransaction('FetchReports', report.email);
             console.log('*** Result: ID searching');
             let r = result.toJSON();
             console.log("Invoke Result:- ", r);
@@ -172,7 +172,7 @@ async function downloadReport(report){
         //start.
         if (check == "true") {
             console.log('\n--> Evaluate Transaction: ReadAsset, function returns an asset with a given assetID');
-            let result = await contract.evaluateTransaction('ReadAssetf', report.email, report.index);
+            let result = await contract.evaluateTransaction('DownloadReport', report.email, report.index);
             console.log('*** Result: ID searching');
             let r = result.toJSON();
             return r;
