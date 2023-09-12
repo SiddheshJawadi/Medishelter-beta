@@ -105,9 +105,6 @@ function Reports() {
       </nav>
 
       <div>
-        <div className="centered-container">
-          <h1>Reports</h1>
-        </div>
         <div className="table-container">
           <table className="table">
             <thead>

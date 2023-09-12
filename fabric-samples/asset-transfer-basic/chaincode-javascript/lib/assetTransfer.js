@@ -22,7 +22,7 @@ class AssetTransfer extends Contract {
         }
     }
 
-    async CreateAsset(ctx, email, name, file, fileName) {
+    async CreateReport(ctx, email, name, file, fileName) {
     console.log("Entered Create Asset");
     const exists = await this.AssetExists(ctx, email)
     const asset = {
@@ -35,7 +35,7 @@ class AssetTransfer extends Contract {
 }
 
 
-async UpdateAsset(ctx, email, name, file, fileName) {
+async AddReport(ctx, email, name, file, fileName) {
     console.log("Entered UpdateAsset Function");
     const exists = await this.AssetExists(ctx, email);
     if (!exists) {
@@ -80,7 +80,7 @@ async UpdateAsset(ctx, email, name, file, fileName) {
         return assetJSON.toString();
     }
 
-    async ReadAssetr(ctx, email) {
+    async FetchReports(ctx, email) {
         const assetJSON = await ctx.stub.getState(email);
         if (!assetJSON || assetJSON.length === 0) {
             throw new Error(`The asset ${email} does not exist`);
@@ -96,7 +96,7 @@ async UpdateAsset(ctx, email, name, file, fileName) {
         return data;
     }
 
-    async ReadAssetf(ctx, email,index) {
+    async DownloadReport(ctx, email,index) {
         const assetJSON = await ctx.stub.getState(email);
         if (!assetJSON || assetJSON.length === 0) {
             throw new Error(`The asset ${email} does not exist`);

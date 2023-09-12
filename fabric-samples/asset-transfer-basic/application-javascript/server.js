@@ -14,6 +14,7 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const fs = require('fs');
 var queries = require('./blockchainController/queries');
+const bcrypt = require('bcryptjs');
 
 
 app.use(cors())
@@ -39,21 +40,24 @@ passport.deserializeUser(User.deserializeUser())
 const jwtSecret = 'supersecretkey'
 
 app.post('/register', async (req, res) => {
-  const user = await User.findOne(
-    { email: req.body.email },
-    { contact: req.body.contact },
-  )
-  if (user) {
-    res.send('<h1>Email or Phone Number Already Registered</h1>')
-    return res.status(422)
-  } else {
-    const firstName = req.body.firstName
-    const role = req.body.role
-    const email = req.body.email
-    const password = req.body.password
-    const contact = req.body.contact
-    const dob = req.body.dob
-    console.log(firstName, role)
+  try {
+    const user = await User.findOne({ $or: [{ email: req.body.email }, { contact: req.body.contact }] });
+
+    if (user) {
+      res.send('<h1>Email or Phone Number Already Registered</h1>');
+      return res.status(422);
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+    const firstName = req.body.firstName;
+    const role = req.body.role;
+    const email = req.body.email;
+    const password = hashedPassword;
+    const contact = req.body.contact;
+    const dob = req.body.dob;
+    console.log(firstName, role);
 
     const formData = new User({
       name: firstName,
@@ -62,34 +66,40 @@ app.post('/register', async (req, res) => {
       password: password,
       contact: contact,
       dob: dob,
-    })
-    try {
-      await formData.save()
-      res.send('inserted data..')
-    } catch (err) {
-      console.log(err)
-    }
+    });
+
+    await formData.save();
+    res.send('Inserted data..');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error inserting data');
   }
-})
+});
+
 
 app.post('/login', async function (req, res) {
   try {
     const user = await User.findOne({ email: req.body.email })
     if (user) {
-      if (req.body.password === user.password) {
-        const role = user.role
-        const token = jwt.sign({ email: user.email }, jwtSecret)
-        res.status(200).json({
-          message: 'Login Approved',
-          token,
-          role,
-          email: user.email,
-          name: user.name,
+      bcrypt.compare(req.body.password, user.password, async function(err,isMatch){
+        if(isMatch){
+          const role = user.role
+          const token = jwt.sign({ email: user.email }, jwtSecret)
+            res.status(200).json({
+            message: 'Login Approved',
+            token,
+            role,
+            email: user.email,
+            name: user.name,
         })
-      } else {
-        console.log('Invalid Password')
-        res.status(200).json({ message: 'Login Denied' })
-      }
+        }
+
+        else{
+          console.log('Invalid Password')
+          res.status(200).json({ message: 'Login Denied' })
+        }
+      })
+
     } else {
       res.status(400).json({ error: "User doesn't exist" })
     }
@@ -143,7 +153,7 @@ app.post('/report', upload.single('file'), async (req, res) => {
     }
 
     console.log("Report data is ", report);
-    let response = await queries.createReport(report);
+    let response = await queries.CreateReport(report);
     console.log(response.result);
 
     if (response.result === "Successfully committed the change to the ledger by the peer" ||
@@ -388,7 +398,7 @@ app.get('/patient/reports', verifyToken, async (req, res) => {
     var report = {
       email:decoded.email,
     }
-    let response = await queries.fetchReports(report);
+    let response = await queries.FetchReports(report);
     console.log("Response - ", response)
     const jsonString = Buffer.from(response.result.data).toString('utf8');
     console.log("JSONSTRING- ", jsonString)
@@ -410,7 +420,7 @@ app.get('/patient/reports/:index', verifyToken, async (req, res) => {
       email: decoded.email,
       index: req.params.index,
     };
-    let response = await queries.downloadReport(report);
+    let response = await queries.DownloadReport(report);
     const jsonString = Buffer.from(response.result.data).toString('utf8');
     const parsedData = JSON.parse(jsonString);
     const filePath = parsedData.filename;
