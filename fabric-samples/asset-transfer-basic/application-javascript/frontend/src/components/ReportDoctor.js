@@ -24,9 +24,6 @@ const Navigation = ({ handleLogout }) => {
         <li>
           <Link to="/reportDoctor">Home</Link>
         </li>
-        {/* <li>
-          <Link to="/prescription">Prescription</Link>
-        </li> */}
         <li>
           <Link to="/reportDoctor/upload">Report</Link>
         </li>

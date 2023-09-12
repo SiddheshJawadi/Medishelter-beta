@@ -4,6 +4,8 @@ import './css/Registration.css'
 import { Link } from 'react-router-dom'
 import MainHeader from './MainHeader/MainHeader1'
 import Foot from './Footer/Footer'
+import Lanpic from './Lanpic.png';
+
 
 export default function Registration() {
   const [name, setName] = useState('')
@@ -26,6 +28,7 @@ export default function Registration() {
       setIsValid(false)
     }
   }
+  
 
   const handleSubmit = (e) => {
     if (!isValid) {
@@ -45,6 +48,7 @@ export default function Registration() {
   return (
     <>
     <div className='nav'><MainHeader /></div>
+    <div className='pic'><img src={Lanpic}/></div>
     <div className="logIn-form">
       <form onSubmit={handleSubmit}>
         <p>First Name</p>
@@ -60,15 +64,6 @@ export default function Registration() {
         />
 
         <p> Company Role</p>
-        {/* <input
-          className="Role"
-          type="text"
-          name="role"
-          placeholder="Role"
-          onChange={(e) => {
-            setRole(e.target.value)
-          }}
-        /> */}
         <select
           name="role"
           id="role"
@@ -109,14 +104,16 @@ export default function Registration() {
         />
 
         <p>Contact Number</p>
-        <input
-          className="Contact"
-          type="text"
-          name="contact"
-          placeholder="Contact Number"
-          onChange={handleMobileNumberChange}
-          required
-        />
+          <input
+            className="Contact"
+            type="text"
+            name="contact"
+            placeholder="Contact Number"
+            maxLength="10" 
+            onChange={handleMobileNumberChange}
+            required
+          />
+
 
         <p>Date of Birth</p>
         <input

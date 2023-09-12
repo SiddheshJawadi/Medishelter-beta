@@ -26,9 +26,6 @@ const MainHeader = (props) => {
       <h1 onClick={handleHome}>MediShelter <sup>beta</sup>  +</h1> 
       <ButtonGroup variant="contained" color="primary" >
       <Stack spacing={2} direction='row'>
-
-      {/* <Button onClick={handleLogin} endIcon={<LoginIcon />}>Login </Button>
-      <Button onClick={handleRegister} endIcon={<AppRegistrationIcon />}>Register</Button> */}
       </Stack>
       </ButtonGroup>
       
