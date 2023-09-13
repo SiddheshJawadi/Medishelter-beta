@@ -405,8 +405,8 @@ app.get('/patient/reports', verifyToken, async (req, res) => {
     const parsedData = JSON.parse(jsonString);
 
     console.log("Server pe jo aaya wo:- ")
-    console.log(parsedData.fileNames);
-    res.status(200).json(parsedData.fileNames)
+    console.log(parsedData.reportNames);
+    res.status(200).json(parsedData.reportNames)
   } catch (err) {
     res.status(403).json({ message: 'Unauthorized' })
   }
@@ -423,8 +423,8 @@ app.get('/patient/reports/:index', verifyToken, async (req, res) => {
     let response = await queries.DownloadReport(report);
     const jsonString = Buffer.from(response.result.data).toString('utf8');
     const parsedData = JSON.parse(jsonString);
-    const filePath = parsedData.filename;
-    fs.writeFile(filePath, parsedData.file, 'base64', function(err) {
+    const filePath = parsedData.reportName;
+    fs.writeFile(filePath, parsedData.report, 'base64', function(err) {
       if (err) {
         res.status(500).json({ message: 'Error writing file' });
         return;
@@ -432,7 +432,7 @@ app.get('/patient/reports/:index', verifyToken, async (req, res) => {
 
       // Now you have the original data in decodedData
       setTimeout(() => {
-        res.download(filePath, parsedData.filename, function(err) {
+        res.download(filePath, parsedData.reportName, function(err) {
           if (err) {
             res.status(500).json({ message: 'Error downloading file' });
             return;

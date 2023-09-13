@@ -7,114 +7,116 @@ const { Contract } = require('fabric-contract-api');
 
 class AssetTransfer extends Contract {
     async InitLedger(ctx) {
-        const assets = [
+        const reportAssets = [
             {
                 email: 'asset1',
                 name: 'blue',
-                files: ['5'],
-                fileNames: ['Tomoko'],
+                reports: ['5'],
+                reportNames: ['Tomoko'],
             },
         ];
 
-        for (const asset of assets) {
-            asset.docType = 'asset';
-            await ctx.stub.putState(asset.email, Buffer.from(stringify(sortKeysRecursive(asset))));
+        for (const report of reportAssets) {
+            report.docType = 'report';
+            await ctx.stub.putState(report.email, Buffer.from(stringify(sortKeysRecursive(report))));
         }
     }
 
-    async CreateReport(ctx, email, name, file, fileName) {
+    async CreateReport(ctx, email, name, report, reportName) {
     console.log("Entered Create Asset");
-    const exists = await this.AssetExists(ctx, email)
-    const asset = {
+    //const exists = await this.ReportExists(ctx, email)
+    const reportAsset = {
         name: name,
-        files: [file], // Initialize the arrays with the first file and its name
-        fileNames: [fileName],
+        reports: [report], // Initialize the arrays with the first file and its name
+        reportNames: [reportName],
     };
-    await ctx.stub.putState(email, Buffer.from(stringify(sortKeysRecursive(asset))));
-    return JSON.stringify(asset);
+    await ctx.stub.putState(email, Buffer.from(stringify(sortKeysRecursive(reportAsset))));
+    return JSON.stringify(reportAsset);
 }
 
 
-async AddReport(ctx, email, name, file, fileName) {
+async AddReport(ctx, email, name, report, reportName) {
     console.log("Entered UpdateAsset Function");
-    const exists = await this.AssetExists(ctx, email);
-    if (!exists) {
-      throw new Error(`The asset ${email} does not exist`);
+    const reportExists = await this.ReportExists(ctx, email);
+    if (!reportExists) {
+      throw new Error(`The reportAsset ${email} does not exist`);
     }
   
-    const assetString = await this.ReadAsset(ctx, email);
-    const asset = JSON.parse(assetString);
+    const ReportAssetString = await this.ReadReportAsset(ctx, email);
+    const reportAsset = JSON.parse(ReportAssetString);
   
     // Update the other attributes if needed
-    asset.name = name;
+    reportAsset.name = name;
   
     // Insert the new file and its name at the beginning of the arrays
-    asset.files.unshift(file);
-    asset.fileNames.unshift(fileName);
+    reportAsset.reports.unshift(report);
+    reportAsset.reportNames.unshift(reportName);
   
-    await ctx.stub.putState(email, Buffer.from(JSON.stringify(asset)));
-    return JSON.stringify(asset);
+    await ctx.stub.putState(email, Buffer.from(JSON.stringify(reportAsset)));
+    return JSON.stringify(reportAsset);
   }
-  
-
-
-    async DeleteAsset(ctx, email) {
-        const exists = await this.AssetExists(ctx, email);
-        if (!exists) {
-            throw new Error(`The asset ${email} does not exist`);
-        }
-        return ctx.stub.deleteState(email);
-    }
-
-    async AssetExists(ctx, email) {
-        const assetJSON = await ctx.stub.getState(email);
-        return assetJSON && assetJSON.length > 0;
-    }
-
-    async ReadAsset(ctx, email) {
-        const assetJSON = await ctx.stub.getState(email);
-        if (!assetJSON || assetJSON.length === 0) {
-            throw new Error(`The asset ${email} does not exist`);
-        }
-    
-        return assetJSON.toString();
-    }
 
     async FetchReports(ctx, email) {
-        const assetJSON = await ctx.stub.getState(email);
-        if (!assetJSON || assetJSON.length === 0) {
-            throw new Error(`The asset ${email} does not exist`);
+        const reportAssetJSON = await ctx.stub.getState(email);
+        if (!reportAssetJSON || reportAssetJSON.length === 0) {
+            throw new Error(`The reportAsset ${email} does not exist`);
         }
     
-        const assetString = assetJSON.toString('utf8'); // Convert buffer to a string
-        const asset = JSON.parse(assetString); // Parse the JSON string
+        const reportAssetString = reportAssetJSON.toString('utf8'); // Convert buffer to a string
+        const reportAsset = JSON.parse(reportAssetString); // Parse the JSON string
         
         var data = {
-            fileNames: asset.fileNames
+            reportNames: reportAsset.reportNames
         };
         
         return data;
     }
 
     async DownloadReport(ctx, email,index) {
-        const assetJSON = await ctx.stub.getState(email);
-        if (!assetJSON || assetJSON.length === 0) {
-            throw new Error(`The asset ${email} does not exist`);
+        const reportAssetJSON = await ctx.stub.getState(email);
+        if (!reportAssetJSON || reportAssetJSON.length === 0) {
+            throw new Error(`The reportAsset ${email} does not exist`);
         }
         
-        const assetString = assetJSON.toString('utf8'); // Convert buffer to a string
-        const asset = JSON.parse(assetString); // Parse the JSON string
+        const reportAssetString = reportAssetJSON.toString('utf8'); // Convert buffer to a string
+        const reportAsset = JSON.parse(reportAssetString); // Parse the JSON string
         
         var data = {
-            filename: asset.fileNames[index],
-            file : asset.files[index]
+            reportName: reportAsset.reportNames[index],
+            report : reportAsset.reports[index]
         }
         
         return data;
     }
 
+    async ReportExists(ctx, email) {
+        const reportAssetJSON = await ctx.stub.getState(email);
+        return reportAssetJSON && reportAssetJSON.length > 0;
+    }
+
+    async ReadReportAsset(ctx, email) {
+        const reportAssetJSON = await ctx.stub.getState(email);
+        if (!reportAssetJSON || reportAssetJSON.length === 0) {
+            throw new Error(`The asset ${email} does not exist`);
+        }
+    
+        return reportAssetJSON.toString();
+    }
+
+  
+
+
+    async DeleteAsset(ctx, email) {
+        const exists = await this.ReportExists(ctx, email);
+        if (!exists) {
+            throw new Error(`The asset ${email} does not exist`);
+        }
+        return ctx.stub.deleteState(email);
+    }
+
+
     async TransferAsset(ctx, email, newOwner) {
-        const assetString = await this.ReadAsset(ctx, email);
+        const assetString = await this.ReadReportAsset(ctx, email);
         const asset = JSON.parse(assetString);
         const oldOwner = asset.Owner;
         asset.Owner = newOwner;
