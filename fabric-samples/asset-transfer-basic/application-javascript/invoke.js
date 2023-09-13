@@ -83,8 +83,8 @@ async function addReports(report){
         gateway = connectedGateway;
 
         // Checking for whether the asset exists or not.
-        console.log('\n--> Evaluate Transaction: AssetExists, function returns "true" if an asset with the given assetID exists');
-        let check = await contract.evaluateTransaction('AssetExists', report.email);
+        console.log('\n--> Evaluate Transaction: ReportExists, function returns "true" if an asset with the given assetID exists');
+        let check = await contract.evaluateTransaction('ReportExists', report.email);
         console.log(`*** Result: ${prettyJSONString(check.toString())}`);
 
         //code
@@ -128,8 +128,8 @@ async function displayReports(report){
         gateway = connectedGateway;
 
         // Checking for whether the asset exists or not.
-        console.log('\n--> Evaluate Transaction: AssetExists, function returns "true" if an asset with the given assetID exists');
-        let check = await contract.evaluateTransaction('AssetExists', report.email);
+        console.log('\n--> Evaluate Transaction: ReportExists, function returns "true" if an asset with the given assetID exists');
+        let check = await contract.evaluateTransaction('ReportExists', report.email);
         console.log(`*** Result: ${prettyJSONString(check.toString())}`);
 
         //Start.
@@ -165,8 +165,8 @@ async function downloadReport(report){
         gateway = connectedGateway;
 
         // Checking for whether the asset exists or not.
-        console.log('\n--> Evaluate Transaction: AssetExists, function returns "true" if an asset with the given assetID exists');
-        let check = await contract.evaluateTransaction('AssetExists', report.email);
+        console.log('\n--> Evaluate Transaction: ReportExists, function returns "true" if an asset with the given assetID exists');
+        let check = await contract.evaluateTransaction('ReportExists', report.email);
         console.log(`*** Result: ${prettyJSONString(check.toString())}`);
 
         //start.
