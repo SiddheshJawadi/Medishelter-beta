@@ -15,6 +15,7 @@ const exec = util.promisify(require('child_process').exec);
 const fs = require('fs');
 var queries = require('./blockchainController/queries');
 const bcrypt = require('bcryptjs');
+var html_to_pdf = require('html-pdf-node');
 
 
 app.use(cors())
@@ -318,29 +319,6 @@ app.post('/addOrg', async (req, res) => {
   
 })
 
-app.post('/prescription', async (req, res) => {
-  console.log('Request', req.body)
-  let reqPatientName = req.body.patientName
-  let reqEmail = req.body.email
-  let reqMedicines = req.body.medicines
-  let reqRemarks = req.body.remarks
-
-  let newForm = new PrescriptionForm({
-    patientName: reqPatientName,
-    email: reqEmail,
-    medicines: [...reqMedicines],
-    remarks: reqRemarks,
-  })
-  try {
-    await newForm.save()
-    res.send(newForm)
-    res.status(200)
-  } catch (err) {
-    console.log(err)
-    res.status(500).send('Error sending data')
-  }
-})
-
 app.get('/physiciandoctor', verifyToken, async (req, res) => {
   try {
     const decoded = jwt.verify(req.token, jwtSecret)
@@ -357,6 +335,94 @@ app.get('/physiciandoctor', verifyToken, async (req, res) => {
     res.status(403).json({ message: 'Unauthorized' })
   }
 })
+
+
+
+app.post('/physiciandoctor/prescription', async (req, res) => {
+  // console.log('Request', req.body)
+  let reqPatientName = req.body.patientName
+  let reqEmail = req.body.email
+  let reqMedicines = req.body.medicines
+  let reqRemarks = req.body.remarks
+
+  var prescription = {
+    patientName: reqPatientName,
+    email: reqEmail,
+    medicines: [...reqMedicines],
+    remarks: reqRemarks,
+  }
+
+  console.log(prescription);
+    
+  res.json({ prescription });
+  
+})
+
+// app.post('/report', upload.single('file'), async (req, res) => {
+//   const Patientname = req.body.name;
+//   const email = req.body.email;
+//   const file = req.file;
+
+//   const fileData = fs.readFileSync(file.path);
+//   const base64Data = fileData.toString('base64');
+
+//   console.log(base64Data);
+
+//   try {
+//     var report = {
+//       email: email,
+//       patientName: Patientname,
+//       file: base64Data,
+//       fileName: file.originalname, 
+//     }
+
+//     console.log("Report data is ", report);
+//     let response = await queries.CreateReport(report);
+//     console.log(response.result);
+
+//     if (response.result === "Successfully committed the change to the ledger by the peer" ||
+//         response.result === "Successfully updated the asset on the ledger") {
+//       // Delete the uploaded file after processing
+//       fs.unlinkSync(file.path);
+      
+//       res.send(response.result);
+//     } else {
+//       // Delete the uploaded file even if there was an error
+//       fs.unlinkSync(file.path);
+      
+//       res.send("Error Committing Chaincode!");
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     // Delete the uploaded file in case of an error
+//     fs.unlinkSync(file.path);
+    
+//     res.status(500).send('Error uploading file');
+//   }
+// });
+
+
+app.post('/physicianDoctor/generatePDF', upload.single('file'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    // Convert the uploaded PDF to base64
+    const pdfBuffer = req.file.buffer;
+    const base64pdf = pdfBuffer.toString('base64');
+
+    // Send the base64 representation as a response
+    res.json({ base64pdf });
+  } catch (error) {
+    console.error('Error handling file upload:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+
 
 app.get('/radiologistdoctor', verifyToken, async (req, res) => {
   try {

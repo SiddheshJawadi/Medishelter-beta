@@ -5,104 +5,172 @@ const stringify = require('json-stringify-deterministic');
 const sortKeysRecursive = require('sort-keys-recursive');
 const { Contract } = require('fabric-contract-api');
 
+const reportCollection = 'reportCollection';
+const prescriptionCollection = 'prescriptionCollection';
+
 class AssetTransfer extends Contract {
     async InitLedger(ctx) {
         const reportAssets = [
             {
-                email: 'asset1',
-                name: 'blue',
+                email: 'email@gmail.com',
+                name: 'sample',
                 reports: ['5'],
                 reportNames: ['Tomoko'],
             },
         ];
 
+        const prescriptionAssets = [
+            {
+                email: 'email@gmail.com',
+                name: 'sample',
+                prescriptions: [
+                    {
+                        medicines: [
+                            {
+                                medicineName: 'MedicineName',
+                                quantity: '5',
+                                usage: '5',
+                            },
+                        ],
+                        remarks: 'remarks',
+                    },
+                ],
+            },
+        ];
+
         for (const report of reportAssets) {
             report.docType = 'report';
-            await ctx.stub.putState(report.email, Buffer.from(stringify(sortKeysRecursive(report))));
+            await ctx.stub.putState(report.email, Buffer.from(stringify(sortKeysRecursive(report))), { collection: reportCollection });
+        }
+
+        for (const prescription of prescriptionAssets) {
+            prescription.docType = 'prescription';
+            await ctx.stub.putState(prescription.email, Buffer.from(stringify(sortKeysRecursive(prescription))), { collection: prescriptionCollection });
         }
     }
 
     async CreateReport(ctx, email, name, report, reportName) {
-    console.log("Entered Create Asset");
-    //const exists = await this.ReportExists(ctx, email)
-    const reportAsset = {
-        name: name,
-        reports: [report], // Initialize the arrays with the first file and its name
-        reportNames: [reportName],
-    };
-    await ctx.stub.putState(email, Buffer.from(stringify(sortKeysRecursive(reportAsset))));
-    return JSON.stringify(reportAsset);
-}
-
-
-async AddReport(ctx, email, name, report, reportName) {
-    console.log("Entered UpdateAsset Function");
-    const reportExists = await this.ReportExists(ctx, email);
-    if (!reportExists) {
-      throw new Error(`The reportAsset ${email} does not exist`);
+        console.log("Entered Create Asset");
+        const reportAsset = {
+            name: name,
+            reports: [report],
+            reportNames: [reportName],
+        };
+        await ctx.stub.putState(email, Buffer.from(stringify(sortKeysRecursive(reportAsset))), { collection: reportCollection });
+        return JSON.stringify(reportAsset);
     }
-  
-    const ReportAssetString = await this.ReadReportAsset(ctx, email);
-    const reportAsset = JSON.parse(ReportAssetString);
-  
-    // Update the other attributes if needed
-    reportAsset.name = name;
-  
-    // Insert the new file and its name at the beginning of the arrays
-    reportAsset.reports.unshift(report);
-    reportAsset.reportNames.unshift(reportName);
-  
-    await ctx.stub.putState(email, Buffer.from(JSON.stringify(reportAsset)));
-    return JSON.stringify(reportAsset);
-  }
+
+    async AddReport(ctx, email, name, report, reportName) {
+        console.log("Entered UpdateAsset Function");
+        const reportExists = await this.ReportExists(ctx, email);
+        if (!reportExists) {
+            throw new Error(`The reportAsset ${email} does not exist`);
+        }
+
+        const ReportAssetString = await this.ReadReportAsset(ctx, email);
+        const reportAsset = JSON.parse(ReportAssetString);
+
+        // Update the other attributes if needed
+        reportAsset.name = name;
+
+        // Insert the new file and its name at the beginning of the arrays
+        reportAsset.reports.unshift(report);
+        reportAsset.reportNames.unshift(reportName);
+
+        await ctx.stub.putState(email, Buffer.from(JSON.stringify(reportAsset)), { collection: reportCollection });
+        return JSON.stringify(reportAsset);
+    }
 
     async FetchReports(ctx, email) {
-        const reportAssetJSON = await ctx.stub.getState(email);
+        const reportAssetJSON = await ctx.stub.getState(email, { collection: reportCollection });
         if (!reportAssetJSON || reportAssetJSON.length === 0) {
             throw new Error(`The reportAsset ${email} does not exist`);
         }
-    
-        const reportAssetString = reportAssetJSON.toString('utf8'); // Convert buffer to a string
-        const reportAsset = JSON.parse(reportAssetString); // Parse the JSON string
-        
+
+        const reportAssetString = reportAssetJSON.toString('utf8');
+        const reportAsset = JSON.parse(reportAssetString);
+
         var data = {
             reportNames: reportAsset.reportNames
         };
-        
+
         return data;
     }
 
-    async DownloadReport(ctx, email,index) {
-        const reportAssetJSON = await ctx.stub.getState(email);
+    async DownloadReport(ctx, email, index) {
+        const reportAssetJSON = await ctx.stub.getState(email, { collection: reportCollection });
         if (!reportAssetJSON || reportAssetJSON.length === 0) {
             throw new Error(`The reportAsset ${email} does not exist`);
         }
-        
-        const reportAssetString = reportAssetJSON.toString('utf8'); // Convert buffer to a string
-        const reportAsset = JSON.parse(reportAssetString); // Parse the JSON string
-        
+
+        const reportAssetString = reportAssetJSON.toString('utf8');
+        const reportAsset = JSON.parse(reportAssetString);
+
         var data = {
             reportName: reportAsset.reportNames[index],
-            report : reportAsset.reports[index]
-        }
-        
+            report: reportAsset.reports[index]
+        };
+
         return data;
     }
 
-    async ReportExists(ctx, email) {
-        const reportAssetJSON = await ctx.stub.getState(email);
-        return reportAssetJSON && reportAssetJSON.length > 0;
-    }
-
     async ReadReportAsset(ctx, email) {
-        const reportAssetJSON = await ctx.stub.getState(email);
+        const reportAssetJSON = await ctx.stub.getState(email, { collection: reportCollection });
         if (!reportAssetJSON || reportAssetJSON.length === 0) {
             throw new Error(`The asset ${email} does not exist`);
         }
-    
+
         return reportAssetJSON.toString();
     }
 
+    async ReportExists(ctx, email) {
+        const reportAssetJSON = await ctx.stub.getState(email, { collection: reportCollection });
+        return reportAssetJSON && reportAssetJSON.length > 0;
+        }
+
+    async CreatePrescription(ctx, email, name, medicines, remark) {
+    console.log("Entered CreatePrescription");
+
+    // Check if a prescription with the provided email already exists
+    const exists = await this.PrescriptionExists(ctx, email);
+    if (exists) {
+        throw new Error(`The prescription for ${email} already exists`);
+    }
+
+    try {
+        // Parse the medicines JSON string
+        const medicinesParsed = JSON.parse(medicines);
+
+        // Create the prescription object
+        const prescription = {
+            name: name,
+            email: email,
+            prescriptions: [
+                {
+                    medicines: medicinesParsed,
+                    remarks: remark
+                }
+            ]
+        };
+
+        // Store the prescription object in the specified collection
+        await ctx.stub.putState(email, Buffer.from(JSON.stringify(prescription)), { collection: prescriptionCollection });
+
+        // Return the prescription object as a valid JSON string
+        return JSON.stringify(prescription);
+    } catch (error) {
+        console.error("Error creating prescription:", error);
+        throw new Error("Failed to create prescription. Check the input data format.");
+    }
+}
+
+
+
+
+    async PrescriptionExists(ctx, email) {
+        const prescriptionAssetJSON = await ctx.stub.getState(email, { collection: prescriptionCollection });
+        return prescriptionAssetJSON && prescriptionAssetJSON.length > 0;
+    }
   
 
 
@@ -144,4 +212,4 @@ async AddReport(ctx, email, name, report, reportName) {
     }
 }
 
-module.exports = AssetTransfer;
+module.exports = AssetTransfer;

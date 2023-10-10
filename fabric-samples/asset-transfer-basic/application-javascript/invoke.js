@@ -69,7 +69,7 @@ async function disconnectFromGateway(gateway) {
     try {
         await gateway.disconnect();
     } catch (error) {
-        console.error(`Failed to disconnect from the gateway: ${error}`);
+        console.error('Failed to disconnect from the gateway: ${error}');
         throw error;
     }
 }
@@ -192,4 +192,49 @@ async function downloadReport(report){
     }
 }
 
-module.exports = {addReports,downloadReport, displayReports};
+async function addPrescriptions(prescription){
+    console.log(prescription, " - is invoke data and you are in addPrescriptions");
+    let gateway;
+    try {
+        // Connect to the gateway and get the contract
+        const { gateway: connectedGateway, contract } = await connectToGateway();
+        gateway = connectedGateway;
+
+        // Checking for whether the asset exists or not.
+        console.log('\n--> Evaluate Transaction: PrescriptionExists, function returns "true" if an asset with the given assetID exists');
+        console.log("Prescription email:- " , prescription.email)
+        let check = await contract.evaluateTransaction('PrescriptionExists', prescription.email);
+        //console.log(`*** Result: ${prettyJSONString(check.toString())}`);
+
+        //code
+        if (check == "true") {
+            console.log('\n--> Submit Transaction: UpdateAsset, update asset with ID email, and update name and/or add new file and fileName');
+            console.log("Invoke Medicines- ", prescription.medicines);
+            let result = await contract.submitTransaction('CreatePrescription', prescription.email, prescription.name, prescription.medicines, prescription.remarks);
+            console.log('*** Result: committed');
+            if (`${result}` !== '') {
+                //console.log(`*** Result: ${prettyJSONString(result.toString())}`);
+                return "Successfully updated the asset on the ledger";
+            }
+        } else if (check == "false") {
+            console.log('\n--> Submit Transaction: CreateAsset, creates new asset with ID email, name, file, and filename arguments');
+            let result = await contract.submitTransaction('CreatePrescription', prescription.email, prescription.name, prescription.medicines, prescription.remarks);
+            console.log('*** Result: committed');
+            if (`${result}` !== '') {
+                //console.log(`*** Result: ${prettyJSONString(result.toString())}`);
+                return "Successfully committed the change to the ledger by the peer";
+            }
+        }
+
+    } catch (error) {
+        console.error(`******** FAILED to run the application: ${error}`);
+        process.exit(1);
+    } finally {
+        // Disconnect from the gateway when done
+        if (gateway) {
+            await disconnectFromGateway(gateway);
+        }
+    }
+}
+
+module.exports = {addReports,downloadReport, displayReports, addPrescriptions};

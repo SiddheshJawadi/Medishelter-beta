@@ -7,9 +7,11 @@ import Patient from './components/Patient'
 import RadiologistDoctor from './components/RadiologistDoctor'
 import ReportDoctor from './components/ReportDoctor'
 import PatientReports from './components/PatientReports'
-import Prescription from './components/prescription'
+import PrescriptionForm from './components/prescriptionForm'
 import PhysicianDoctor from './components/PhysicianDoctor'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import PrescriptionPreview from './components/prescriptionPreview'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; 
+
 // import Foot from './components/Footer/Footer'
 
 function App() {
@@ -31,7 +33,8 @@ function App() {
               <Route path="/reportDoctor" element={<RadiologistDoctor />} />
               <Route path="/reportDoctor/upload" element={<ReportDoctor />} />
               <Route path="/physicianDoctor" element={<PhysicianDoctor />} />
-              <Route path="/physicianDoctor/prescription" element={<Prescription />} />
+              <Route path="/physicianDoctor/prescription" element={<PrescriptionForm />} />
+              <Route path="/physicianDoctor/prescription/preview" element={<PrescriptionPreview />} />
               <Route path="/physicianDoctor/report" element={<></>} />
             </Routes>
           </Router>

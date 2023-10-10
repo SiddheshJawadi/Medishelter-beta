@@ -1,0 +1,44 @@
+/* In your CSS or SCSS file */
+
+/* @page {
+    size: A2;
+    margin: 0;
+}
+
+@media print {
+    body, html {
+        width: 21cm !important;
+        height: 29.7cm !important;
+        margin: 0;
+    }
+    .print-preview {
+        width: 21cm;
+        height: 29.7cm;
+        margin: 0;
+        border: 5px solid #000;
+    }
+} */
+
+.preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.preview-table th, .preview-table td {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.preview-table th {
+  background-color: #f2f2f2;
+}
+
+.preview-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.preview-table tr:hover {
+  background-color: #e5e5e5;
+}

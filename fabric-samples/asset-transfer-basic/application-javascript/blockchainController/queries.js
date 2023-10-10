@@ -10,7 +10,7 @@ let CreateReport= async (report) => {
  console.log("data is:",report.email);
     try {
      const meddoc =  await invoke.addReports(report);
-        console.log("meddoc ", meddoc);
+        console.log("report ", meddoc);
        return { result: meddoc };
     
     } catch (err) {
@@ -80,4 +80,19 @@ let FetchReports = async(report) => {
  
  };
 
-module.exports = {CreateReport, FetchReports, DownloadReport};
+ let CreatePrescription= async (prescription) => {
+
+ console.log("Queries Data:",prescription);
+    try {
+     const meddoc =  await invoke.addPrescriptions(prescription); //imp change
+        console.log("Queries Data ", meddoc);
+       return { result: meddoc };
+    
+    } catch (err) {
+        
+        return { result: err };
+    }
+
+};
+
+module.exports = {CreateReport, FetchReports, DownloadReport, CreatePrescription};
