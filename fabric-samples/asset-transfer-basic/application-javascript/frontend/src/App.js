@@ -11,8 +11,7 @@ import PrescriptionForm from './components/prescriptionForm'
 import PhysicianDoctor from './components/PhysicianDoctor'
 import PrescriptionPreview from './components/prescriptionPreview'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; 
-
-// import Foot from './components/Footer/Footer'
+import Foot from './components/Footer/Footer'
 
 function App() {
   return (
@@ -39,8 +38,8 @@ function App() {
             </Routes>
           </Router>
         </div>
-        {/* <Foot /> */}
       </div>
+      { <Foot /> }
     </>
   )
 }

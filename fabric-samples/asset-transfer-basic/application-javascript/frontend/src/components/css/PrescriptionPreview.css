@@ -19,7 +19,7 @@
     }
 } */
 
-.preview-table {
+/* .preview-table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
@@ -41,4 +41,21 @@
 
 .preview-table tr:hover {
   background-color: #e5e5e5;
+} */
+
+.prescription-preview button {
+  display: block;
+  height: 50px;
+  background-color:#010047;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  margin: 0 auto;
+  margin-bottom: 45px;
 }

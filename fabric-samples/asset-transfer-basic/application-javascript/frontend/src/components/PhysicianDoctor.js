@@ -87,7 +87,6 @@ function RadiologistDoctor() {
         </nav>
       </div>
     </div>
-    <div><Foot /></div>
     </>
   )
 }

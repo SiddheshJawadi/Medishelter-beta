@@ -131,7 +131,6 @@ function Reports() {
         </div>
       </div>
     </div>
-    <div><Foot /></div>
     </>
   );
 }

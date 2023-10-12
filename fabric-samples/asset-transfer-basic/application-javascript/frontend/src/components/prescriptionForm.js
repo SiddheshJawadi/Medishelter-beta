@@ -13,7 +13,7 @@ function MedicineField({ id, onChange }) {
   const [medicineName, setMedicineName] = useState('')
   const [quantity, setQuantity] = useState('')
   const [usage, setUsage] = useState('')
-
+  
   const handleMedicineNameChange = (e) => {
     setMedicineName(e.target.value)
     onChange(id, { id, medicineName: e.target.value, quantity, usage })
@@ -72,6 +72,7 @@ const PrescriptionForm = () => {
     ],
     remarks: '',
   });
+
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -125,7 +126,10 @@ const PrescriptionForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/physicianDoctor/prescription/preview');
+    const ele = document.getElementById('scrollhere');
+    if (ele) {
+      ele.scrollIntoView({behavior:"smooth", block: "start", inline:"center"});
+    }
   };
 
   const handleLogout = () => {
@@ -222,7 +226,6 @@ const PrescriptionForm = () => {
         </div>
       </div>
       {prescriptionData && <PrescriptionPreview prescriptionData={prescriptionData} />}
-      {/* <div><Foot /></div> */}
     </>
   );
 }

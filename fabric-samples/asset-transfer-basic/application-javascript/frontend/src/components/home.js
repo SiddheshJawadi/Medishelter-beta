@@ -65,7 +65,6 @@ One of the standout advantages of using Hyperledger Fabric is its implementation
             <p>Tanmay</p>
         </Stack>
     </div>
-    <div className='foot'><Foot /></div>
     </>
   )
 }

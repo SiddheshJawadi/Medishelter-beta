@@ -141,7 +141,6 @@ export default function Registration() {
         </div>
       </form>
     </div>
-    <div><Foot /></div>
 
     </>
   )

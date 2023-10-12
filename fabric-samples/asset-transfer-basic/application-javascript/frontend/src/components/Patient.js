@@ -87,7 +87,6 @@ const Patient = () => {
     </nav>
     </div>
     </div>
-    <div><Foot /></div>
     </>
     
   )

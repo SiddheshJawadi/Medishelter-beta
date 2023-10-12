@@ -101,7 +101,6 @@ const Login = (props) => {
       </form>
     </div>
     </div>
-    <div><Foot /></div>
     </>
   )
 }
