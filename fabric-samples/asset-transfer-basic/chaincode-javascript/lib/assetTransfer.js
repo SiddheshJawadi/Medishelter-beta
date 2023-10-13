@@ -128,25 +128,33 @@ class AssetTransfer extends Contract {
         return JSON.stringify(prescriptionAsset);
     }
 
-    async AddReport(ctx, email, name, report, reportName) {
-        console.log("Entered UpdateAsset Function");
-        const reportExists = await this.ReportExists(ctx, email);
-        if (!reportExists) {
+    async ReadPrescriptionAsset(ctx, email) {
+        const prescriptionAssetJSON = await ctx.stub.getState(email, { collection: prescriptionCollection });
+        if (!prescriptionAssetJSON || prescriptionAssetJSON.length === 0) {
+            throw new Error(`The asset ${email} does not exist`);
+        }
+
+        return prescriptionAssetJSON.toString();
+    }
+
+    async AddPrescription(ctx, email, name, prescriptionName, prescription) {
+        const prescriptionExists = await this.PrescriptionExists(ctx, email);
+        if (!prescriptionExists) {
             throw new Error(`The reportAsset ${email} does not exist`);
         }
 
-        const ReportAssetString = await this.ReadReportAsset(ctx, email);
-        const reportAsset = JSON.parse(ReportAssetString);
+        const prescriptionAssetString = await this.ReadPrescriptionAsset(ctx, email);
+        const prescriptionAsset = JSON.parse(prescriptionAssetString);
 
         // Update the other attributes if needed
-        reportAsset.name = name;
+        prescriptionAsset.name = name;
 
         // Insert the new file and its name at the beginning of the arrays
-        reportAsset.reports.unshift(report);
-        reportAsset.reportNames.unshift(reportName);
+        prescriptionAsset.prescriptions.unshift(prescription);
+        prescriptionAsset.prescriptionNames.unshift(prescriptionName);
 
-        await ctx.stub.putState(email, Buffer.from(JSON.stringify(reportAsset)), { collection: reportCollection });
-        return JSON.stringify(reportAsset);
+        await ctx.stub.putState(email, Buffer.from(JSON.stringify(prescriptionAsset)), { collection: prescriptionCollection });
+        return JSON.stringify(prescriptionAsset);
     }
 
 
