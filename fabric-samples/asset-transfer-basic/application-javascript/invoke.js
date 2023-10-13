@@ -209,8 +209,7 @@ async function addPrescriptions(prescription){
         //code
         if (check == "true") {
             console.log('\n--> Submit Transaction: UpdateAsset, update asset with ID email, and update name and/or add new file and fileName');
-            console.log("Invoke Medicines- ", prescription.medicines);
-            let result = await contract.submitTransaction('CreatePrescription', prescription.email, prescription.name, prescription.medicines, prescription.remarks);
+            let result = await contract.submitTransaction('CreatePrescription', prescription.email, prescription.name, prescription.fileName, prescription.file);
             console.log('*** Result: committed');
             if (`${result}` !== '') {
                 //console.log(`*** Result: ${prettyJSONString(result.toString())}`);
@@ -218,7 +217,7 @@ async function addPrescriptions(prescription){
             }
         } else if (check == "false") {
             console.log('\n--> Submit Transaction: CreateAsset, creates new asset with ID email, name, file, and filename arguments');
-            let result = await contract.submitTransaction('CreatePrescription', prescription.email, prescription.name, prescription.medicines, prescription.remarks);
+            let result = await contract.submitTransaction('CreatePrescription', prescription.email, prescription.name, prescription.fileName, prescription.file);
             console.log('*** Result: committed');
             if (`${result}` !== '') {
                 //console.log(`*** Result: ${prettyJSONString(result.toString())}`);

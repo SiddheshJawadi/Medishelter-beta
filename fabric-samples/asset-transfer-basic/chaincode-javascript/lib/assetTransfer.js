@@ -23,19 +23,9 @@ class AssetTransfer extends Contract {
             {
                 email: 'email@gmail.com',
                 name: 'sample',
-                prescriptions: [
-                    {
-                        medicines: [
-                            {
-                                medicineName: 'MedicineName',
-                                quantity: '5',
-                                usage: '5',
-                            },
-                        ],
-                        remarks: 'remarks',
-                    },
-                ],
-            },
+                prescriptionNames: ['p1n'],
+                prescriptions: ['p1'],
+            }
         ];
 
         for (const report of reportAssets) {
@@ -128,43 +118,36 @@ class AssetTransfer extends Contract {
         return reportAssetJSON && reportAssetJSON.length > 0;
         }
 
-    async CreatePrescription(ctx, email, name, medicines, remark) {
-    console.log("Entered CreatePrescription");
-
-    // Check if a prescription with the provided email already exists
-    const exists = await this.PrescriptionExists(ctx, email);
-    if (exists) {
-        throw new Error(`The prescription for ${email} already exists`);
-    }
-
-    try {
-        // Parse the medicines JSON string
-        const medicinesParsed = JSON.parse(medicines);
-
-        // Create the prescription object
-        const prescription = {
+    async CreatePrescription(ctx, email, name, prescriptionName, prescription) {
+        const prescriptionAsset = {
             name: name,
-            email: email,
-            prescriptions: [
-                {
-                    medicines: medicinesParsed,
-                    remarks: remark
-                }
-            ]
+            prescriptions: [prescription],
+            prescriptionNames: [prescriptionName],
         };
-
-        // Store the prescription object in the specified collection
-        await ctx.stub.putState(email, Buffer.from(JSON.stringify(prescription)), { collection: prescriptionCollection });
-
-        // Return the prescription object as a valid JSON string
-        return JSON.stringify(prescription);
-    } catch (error) {
-        console.error("Error creating prescription:", error);
-        throw new Error("Failed to create prescription. Check the input data format.");
+        await ctx.stub.putState(email, Buffer.from(stringify(sortKeysRecursive(prescriptionAsset))), { collection: prescriptionCollection });
+        return JSON.stringify(prescriptionAsset);
     }
-}
 
+    async AddReport(ctx, email, name, report, reportName) {
+        console.log("Entered UpdateAsset Function");
+        const reportExists = await this.ReportExists(ctx, email);
+        if (!reportExists) {
+            throw new Error(`The reportAsset ${email} does not exist`);
+        }
 
+        const ReportAssetString = await this.ReadReportAsset(ctx, email);
+        const reportAsset = JSON.parse(ReportAssetString);
+
+        // Update the other attributes if needed
+        reportAsset.name = name;
+
+        // Insert the new file and its name at the beginning of the arrays
+        reportAsset.reports.unshift(report);
+        reportAsset.reportNames.unshift(reportName);
+
+        await ctx.stub.putState(email, Buffer.from(JSON.stringify(reportAsset)), { collection: reportCollection });
+        return JSON.stringify(reportAsset);
+    }
 
 
     async PrescriptionExists(ctx, email) {

@@ -1,29 +1,15 @@
-import React, {useRef} from 'react';
+import React, { useRef } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import './css/PrescriptionPreview.css';
+import axios from 'axios';
 
+
+import './css/PrescriptionPreview.css';
 
 const PrescriptionPreview = ({ prescriptionData }) => {
   const pdfRef = useRef();
-  const generatePDF = () => {
-    // const element = document.getElementById('pdf-content');
-    // const capturedHtml = element.innerHTML;
-    // const doc = new jsPDF({
-    //   orientation: 'portrait',
-    //   unit: 'mm',
-    //   format: 'a4',
-    //   marginLeft: 10,
-    //   marginRight: 10,
-    //   marginTop: 10,
-    //   marginBottom: 10,
-    // });
 
-    // doc.html(capturedHtml, {
-    //   callback: function (doc) {
-    //     doc.save('document.pdf');
-    //   },
-    // });
+  const generatePDF = () => {
     const input = pdfRef.current;
     html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL('img/png');
@@ -37,9 +23,37 @@ const PrescriptionPreview = ({ prescriptionData }) => {
       const imgY = 60;
       pdf.setFontSize(30);
       pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-      pdf.save('prescription.pdf'); 
+      //pdf.save('pres');
+
+      // Convert the PDF to a Blob
+      const blob = pdf.output('blob');
+
+      // Create a File object from the Blob
+      const pdfFile = new File([blob], 'prescription.pdf', { type: 'application/pdf' });
+
+      //get current datetime
+      const currentDateTime = Date().toLocaleString();
+      const trimmedDateTime = currentDateTime.substring(0,24);
+      console.log('Time is: ',trimmedDateTime);
+
+      // Create a FormData object to send the File to the server
+      const formData = new FormData();
+      formData.append('name', prescriptionData.patientName)
+      formData.append('email', prescriptionData.email)
+      formData.append('file', pdfFile);
+      formData.append('fileName', trimmedDateTime);
+
+      // Use Axios to send the PDF as a file to your backend API
+      axios.post('http://localhost:3000/physicianDoctor/generatePDF', formData)
+        .then((response) => {
+          console.log('PDF sent to the backend:', response);
+        })
+        .catch((error) => {
+          console.error('Error sending PDF to the backend:', error);
+        });
     });
   };
+
   if (!prescriptionData) {
     return null;
   }

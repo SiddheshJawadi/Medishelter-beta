@@ -402,22 +402,41 @@ app.post('/physiciandoctor/prescription', async (req, res) => {
 // });
 
 
-app.post('/physicianDoctor/generatePDF', upload.single('file'), (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
+app.post('/physicianDoctor/generatePDF', upload.single('file'), async (req, res) => {
+  const name = req.body.name;
+  const email = req.body.email;
+  const file = req.file;
+  const fileName = req.body.fileName;
+  const fileData = fs.readFileSync(file.path);
+  const base64Data = fileData.toString('base64');
+  console.log(fileName);
+  try{
+    var prescription = {
+      email : email,
+      name : name,
+      fileName: fileName,
+      file: base64Data,
+    }
+    console.log('Prescription ', prescription);
+    let response = await queries.CreatePrescription(prescription);
+    if (response.result === "Successfully committed the change to the ledger by the peer" ||
+        response.result === "Successfully updated the asset on the ledger") {
+      // Delete the uploaded file after processing
+      fs.unlinkSync(file.path);
+      
+      res.send(response.result);
+    } else {
+      // Delete the uploaded file even if there was an error
+      fs.unlinkSync(file.path);
+      
+      res.send("Error Committing Chaincode!");
     }
 
-    // Convert the uploaded PDF to base64
-    const pdfBuffer = req.file.buffer;
-    const base64pdf = pdfBuffer.toString('base64');
-
-    // Send the base64 representation as a response
-    res.json({ base64pdf });
-  } catch (error) {
-    console.error('Error handling file upload:', error);
-    res.status(500).json({ error: 'Internal server error' });
   }
+  catch(err){
+    console.log(err);
+  }
+
 });
 
 

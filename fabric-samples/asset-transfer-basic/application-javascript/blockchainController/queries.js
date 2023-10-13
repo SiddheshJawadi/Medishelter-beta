@@ -84,8 +84,8 @@ let FetchReports = async(report) => {
 
  console.log("Queries Data:",prescription);
     try {
-     const meddoc =  await invoke.addPrescriptions(prescription); //imp change
-        console.log("Queries Data ", meddoc);
+     const meddoc =  await invoke.addPrescriptions(prescription); 
+        console.log("Prescription Data ", meddoc);
        return { result: meddoc };
     
     } catch (err) {
